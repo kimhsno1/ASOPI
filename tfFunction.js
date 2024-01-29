@@ -1,6 +1,7 @@
 const tf = require('@tensorflow/tfjs-node');
+const fs = require('fs');
 // 모델 파일의 경로 및 모델 변수 초기화
-const modelPath = 'models/ResNet50V2_epoch10'; // 모델 파일 경로
+const modelPath = 'models/ResNet50V2_epoch10(final)'; // 모델 파일 경로
 let model;
 
 // class_dictionary 전역으로 선언
@@ -36,21 +37,18 @@ const class_dictionary = {
     D07: 'seborrhoeic dermatitis baby',
     D08: 'heat rash',
 };
+
 // 모델 불러오기
 async function loadModel() {
     try {
         if (!model) {
             // 모델이 이미 로드되어 있지 않은 경우에만 로드
             model = await tf.node.loadSavedModel(modelPath);
-            console.log('모델이 성공적으로 로드되었습니다.', model);
 
-            // 추가: 모델이 정상적으로 로드되었을 때 로그
-            if (model && model.layers) {
-                const firstLayer = await model.layers[0];
-                console.log('첫 번째 레이어의 입력 형태 : ', firstLayer.inputShape);
-            } else {
-                console.log('레이어 정보를 가져올 수 없습니다.');
-            }
+            // 모델의 레이어 정보 출력
+            // printLayers(model);
+
+            console.log('모델이 성공적으로 로드되었습니다.', model);
         } else {
             console.log('모델이 이미 로드되어 있습니다.');
         }
@@ -63,10 +61,21 @@ async function loadModel() {
     }
 }
 
+// 모델의 레이어 정보 출력
+// function printLayers(model) {
+//     console.log('Model Layers:');
+//     if (model.layers) {
+//         model.layers.forEach((layer, index) => {
+//             console.log(`Layer ${index + 1}: ${layer.name} - Shape: ${JSON.stringify(layer.outputShape)}`);
+//         });
+//     } else {
+//         console.log('No layers found in the model.');
+//     }
+// }
 // 이미지 전처리
 async function preprocessImage(imageBuffer) {
     // 이미지를 uint8 텐서로 디코딩
-    const imageTensor = tf.node.decodeImage(imageBuffer);
+    const imageTensor = tf.node.decodeImage(imageBuffer, 3);
 
     // 이미지 텐서의 데이터 타입을 float32로 변경
     const floatImageTensor = imageTensor.toFloat();

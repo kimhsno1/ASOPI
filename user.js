@@ -3,15 +3,27 @@ const axios = require('axios');
 const bcrypt = require('bcrypt');
 
 // 회원가입
-async function signUp(nickname, password, email) {
+async function signUp(nickname, password, email, birth, gender) {
     const connection = await oracledb.getConnection();
     try {
         // 암호화된 비밀번호 생성
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // 이메일 중복 확인
+        const emailCheckSql = 'SELECT COUNT(*) FROM USER_TABLE WHERE EMAIL = :email';
+        const emailCheckBinds = { email };
+        const emailCheckResult = await connection.execute(emailCheckSql, emailCheckBinds);
+        const emailCount = emailCheckResult.rows[0][0];
+
+        if (emailCount > 0) {
+            // 이미 존재하는 이메일인 경우 오류 반환
+            throw new Error('이미 가입한 이메일이 있습니다.');
+        }
+
         // 회원가입 쿼리 실행
-        const sql = `INSERT INTO USER_TABLE (NICKNAME, PASSWORD, EMAIL) VALUES (:nickname, :password, :email)`;
-        const binds = { nickname, password: hashedPassword, email };
+        const sql =
+            'INSERT INTO USER_TABLE (NICKNAME, PASSWORD, EMAIL, BIRTH, GENDER) VALUES (:nickname, :password, :email, :birth, :gender)';
+        const binds = { nickname, password: hashedPassword, email, birth, gender };
 
         await connection.execute(sql, binds);
         console.log('User registered successfully!');
@@ -34,7 +46,7 @@ async function login(email, password) {
     const connection = await oracledb.getConnection();
     try {
         // 사용자 정보 조회
-        const sql = 'SELECT ID, NICKNAME, PASSWORD FROM USER_TABLE WHERE EMAIL = :email';
+        const sql = 'SELECT ID, NICKNAME, EMAIL, PASSWORD FROM USER_TABLE WHERE EMAIL = :email';
         const binds = { email };
 
         const result = await connection.execute(sql, binds);
@@ -44,7 +56,7 @@ async function login(email, password) {
         }
 
         const user = result.rows[0];
-        const hashedPassword = user[2];
+        const hashedPassword = user[3];
 
         // 비밀번호 일치 확인
         if (!hashedPassword) {
@@ -58,7 +70,7 @@ async function login(email, password) {
         }
 
         console.log('User logged in successfully!');
-        return { id: user[0], name: user[1] };
+        return { name: user[1], email: user[2] };
     } catch (err) {
         console.error('Error logging in:', err.message);
         throw err;
@@ -73,10 +85,29 @@ async function login(email, password) {
     }
 }
 
+// JWT 검증 미들웨어
+function verifyToken(req, res, next) {
+    const token = req.cookies.token;
+
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.status(403).json({ error: 'Invalid token' });
+        }
+
+        req.user = user;
+        next();
+    });
+}
+
 // 마이페이지
 async function myPage(email) {
     const connection = await oracledb.getConnection();
     try {
+        const userEmail = req.headers.email;
         // 사용자 정보 가져오기
         const sql = 'SELECT RECORD, RECORD_DATE FROM USER_RECORD WHERE EMAIL = :email';
         const binds = { email };
@@ -174,4 +205,5 @@ module.exports = {
     myPage,
     getKakaoToken,
     getKakaoUserInfo,
+    verifyToken,
 };

@@ -19,13 +19,13 @@ async function connectToDB() {
 }
 
 // 데이터베이스에 modelResult 저장하는 함수
-async function saveModelResult(modelResult) {
+async function saveModelResult(modelResult, userEmail) {
     const connection = await oracledb.getConnection();
     try {
         const currentDate = new Date();
 
         //modelResult를 사용해 disease 테이블에서 질병 정보 가져오기
-        const diseaseQuery = `SELECT SYMPTOM, DESCRIPTION FROM DISEASE WHERE DISEASE_CODE = :modelResult`;
+        const diseaseQuery = `SELECT NAME, SYMPTOM, DESCRIPTION FROM DISEASE WHERE DISEASE_CODE = :modelResult`;
         const diseaseInfo = await connection.execute(diseaseQuery, [modelResult]);
 
         if (diseaseInfo.rows.length === 0) {
@@ -33,19 +33,20 @@ async function saveModelResult(modelResult) {
             return;
         }
 
-        const [symptom, desc] = diseaseInfo.rows[0];
+        const [name, symptom, desc] = diseaseInfo.rows[0];
 
-        // USER_RECORD 테이블에 modelResult, symptom, desc 및 현재 시간을 삽입하는 쿼리
         const recordData = {
-            modelResult,
+            userEmail,
+            name,
             symptom,
             desc,
         };
 
         // USER_RECORD 테이블에 modelResult 및 현재 시간을 삽입하는 쿼리
-        const sql = 'INSERT INTO USER_RECORD (RECORD, DATE) VALUES (:record, :currentDate)';
+        const sql = 'INSERT INTO USER_RECORD (EMAIL, RECORD, DATE) VALUES (:userEmail, :record, :currentDate)';
         // 쿼리에 바인딩할 값들 정의
         const binds = {
+            userEmail,
             record: JSON.stringify(recordData), // JSON 형식으로 저장
             currentDate,
         };

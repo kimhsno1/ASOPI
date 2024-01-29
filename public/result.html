@@ -10,6 +10,7 @@
     <body>
         <h1>결과</h1>
         <div id="result-container"></div>
+        <button id="diagnoseButton">다시 진단하기</button>
 
         <script>
             // 쿼리 파라미터에서 result 값을 가져오기
@@ -20,7 +21,12 @@
             const resultContainer = document.getElementById('result-container');
             resultContainer.textContent = `감지된 병변: ${result}`;
 
-            // 이후에 필요한 작업 수행
+            // "다시 진단하기" 버튼 생성 및 이벤트 리스너 추가
+            const diagnoseButton = document.getElementById('diagnoseButton');
+            diagnoseButton.addEventListener('click', function () {
+                // "diagnosis.html"로 이동
+                window.location.href = 'diagnosis.html';
+            });
         </script>
     </body>
 </html>

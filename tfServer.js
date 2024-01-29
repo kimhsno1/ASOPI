@@ -36,6 +36,8 @@ tfServer.post('/upload', upload.single('image'), async (req, res) => {
         if (!req.file) {
             return res.status(400).send('No file uploaded.');
         }
+        // 유저 이메일 추출
+        const userEmail = req.body.email;
         //이미지 정보 로깅
         console.log('image received: ', req.file);
         // 모델 로드
@@ -49,29 +51,27 @@ tfServer.post('/upload', upload.single('image'), async (req, res) => {
         // 모델에 이미지 제출 및 결과 출력
         const modelResult = await submitToModel(inputTensor);
 
+        // 모델 연결 해제
+        if (model) {
+            model.dispose();
+        }
         // 결과 페이지로 이동
         res.redirect(`/result.html?result=${modelResult}`);
-
-        // 모델 연결 해제
-        model.dispose();
-
-        // // 모델이 로드 되지 않은 경우
-        // if (!model) {
-        //     return res.status(500).send('Model not loaded. Please try again later.');
-        // }
         // 출력된 결과를 함수에 넣어 병명 찾아오기
         try {
             const disease = await database.getDisease(modelResult);
             const symptom = await database.getSymptom(modelResult);
-            return res.json({ disease, symptom });
+            await database.saveModelResult(modelResult, userEmail);
+            res.json({ disease, symptom });
         } catch (error) {
             console.error('can not load diesease and symptom:', error);
             res.status(500).json({ error: 'Failed to load diesease and symptom' });
         }
+        return;
         // 이미지 처리중 에러 발생한 경우
     } catch (error) {
         console.error('Error during image processing:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 

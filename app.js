@@ -11,9 +11,6 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT;
 
-// 쿠키 파서 미들웨어 등록
-app.use(cookieParser());
-
 // 정적 파일 서비스 설정
 app.use(express.static('public'));
 // TensorFlow 서버 라우터 등록
@@ -24,20 +21,16 @@ app.use('/uploads', express.static('uploads'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 뷰 엔진 설정
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // 회원가입 처리
 app.post('/signup', async (req, res) => {
-    const { name, password, email } = req.body;
+    const { nickname, password, email, birth, gender } = req.body;
 
     try {
-        await user.signUp(name, password, email);
+        await user.signUp(nickname, password, email, birth, gender);
         res.json({ message: 'User registered successfully!' });
     } catch (error) {
         console.error('Error registering user:', error);
@@ -51,10 +44,10 @@ app.post('/login', async (req, res) => {
 
     try {
         const userInfo = await user.login(email, password);
-        const redirectTo = 'http://localhost:3000';
+        const redirectTo = '/';
 
         // JWT 생성 및 쿠키에 저장
-        const token = jwt.sign({ userId: userInfo.id, userName: userInfo.name }, process.env.JWT_SECRET, {
+        const token = jwt.sign({ userEmail: userInfo.email, userName: userInfo.name }, process.env.JWT_SECRET, {
             expiresIn: '2h',
         });
         res.cookie('token', token, { httpOnly: true });
@@ -93,26 +86,8 @@ app.get('/oauth', async (req, res) => {
     }
 });
 
-// JWT 검증 미들웨어
-function verifyToken(req, res, next) {
-    const token = req.cookies.token;
-
-    if (!token) {
-        return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if (err) {
-            return res.status(403).json({ error: 'Invalid token' });
-        }
-
-        req.user = user;
-        next();
-    });
-}
-
 // 마이페이지
-app.get('/mypage/:email', async (req, res) => {
+app.get('/mypage/:email', user.verifyToken, async (req, res) => {
     try {
         const email = req.params.email;
         const userRecords = await user.myPage(email);
@@ -126,7 +101,7 @@ app.get('/mypage/:email', async (req, res) => {
 });
 
 // 업로드 폼 보여주기
-app.get('/diagnosis', verifyToken, (req, res) => {
+app.get('/diagnosis', user.verifyToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'diagnosis.html'));
 });
 
