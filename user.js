@@ -1,6 +1,7 @@
 const oracledb = require('oracledb');
 const axios = require('axios');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // 회원가입
 async function signUp(nickname, password, email, birth, gender) {
@@ -199,6 +200,22 @@ async function getKakaoUserInfo(accessToken) {
     }
 }
 
+// 토큰 사용하기
+async function processToken(token) {
+    try {
+        // 토큰 검증
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+
+        // userEmail을 사용하여 사용자 정보 가져오기
+        const userEmail = await getUserInfo(decodedToken.userEmail);
+
+        return userEmail;
+    } catch (error) {
+        console.error('Error verifying token:', error.message);
+        throw new Error('Invalid token');
+    }
+}
+
 module.exports = {
     signUp,
     login,
@@ -206,4 +223,5 @@ module.exports = {
     getKakaoToken,
     getKakaoUserInfo,
     verifyToken,
+    processToken,
 };

@@ -5,7 +5,6 @@ const path = require('path');
 const fs = require('fs').promises;
 const tf = require('@tensorflow/tfjs-node');
 const { submitToModel, preprocessImage, loadModel } = require('./tfFunction'); // TensorFlow 관련 함수
-
 let model;
 
 const tfServer = express.Router();
@@ -31,13 +30,10 @@ const upload = multer({
 
 // 이미지 업로드 및 모델에 제출 처리
 tfServer.post('/upload', upload.single('image'), async (req, res) => {
-    //await loadModel();
     try {
         if (!req.file) {
             return res.status(400).send('No file uploaded.');
         }
-        // 유저 이메일 추출
-        const userEmail = req.body.email;
         //이미지 정보 로깅
         console.log('image received: ', req.file);
         // 모델 로드
@@ -55,19 +51,19 @@ tfServer.post('/upload', upload.single('image'), async (req, res) => {
         if (model) {
             model.dispose();
         }
-        // 결과 페이지로 이동
-        res.redirect(`/result.html?result=${modelResult}`);
         // 출력된 결과를 함수에 넣어 병명 찾아오기
         try {
             const disease = await database.getDisease(modelResult);
             const symptom = await database.getSymptom(modelResult);
-            await database.saveModelResult(modelResult, userEmail);
-            res.json({ disease, symptom });
+            const description = await database.getDescription(modelResult);
+            await database.saveModelResult(disease, symptom, description, userEmail, childName, childAge);
+            return res.json({ disease, symptom, description });
         } catch (error) {
             console.error('can not load diesease and symptom:', error);
             res.status(500).json({ error: 'Failed to load diesease and symptom' });
         }
-        return;
+        // 결과 페이지로 이동
+        res.redirect(`/result.html?result=${modelResult}`);
         // 이미지 처리중 에러 발생한 경우
     } catch (error) {
         console.error('Error during image processing:', error);

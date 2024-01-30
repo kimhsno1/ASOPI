@@ -6,36 +6,36 @@ let model;
 
 // class_dictionary 전역으로 선언
 const class_dictionary = {
-    A01: 'melanocytic nevus',
-    A02: 'mongolian spot',
-    A03: 'Beckers nevus',
-    A04: 'cafe au lait spot',
-    A05: 'salmon patch',
-    A06: 'epidermal nevi',
-    A07: 'nevus sebaceus',
-    A08: 'port-wine mark',
-    A09: 'infantile hemangioma',
-    B01: 'baby Psoriasis',
-    B02: 'urticaria',
-    B03: 'baby Acne',
-    B04: 'baby atopic dermatitis',
-    B05: 'lichen simplex chronicus',
-    B06: 'Nummular eczema',
-    C01: 'Herpes Simplex',
-    C02: 'Varicella',
-    C03: 'Molluscum Contagiosum',
-    C04: 'Impetigo',
-    C05: 'Hives Urticaria Acute',
-    C06: 'Tinea',
-    C07: 'hand-foot-and-mouth disease',
-    D01: 'vitiligo',
-    D02: 'juvenile xanthogranuloma',
-    D03: 'melanoma',
-    D04: 'keloids',
-    D05: 'mastocytoma',
-    D06: 'lichen striatus',
-    D07: 'seborrhoeic dermatitis baby',
-    D08: 'heat rash',
+    A01: '멜라닌 세포모반',
+    A02: '이소성몽고반점',
+    A03: '베커모반',
+    A04: '밀크커피모반',
+    A05: '연어반',
+    A06: '표피모반',
+    A07: '피지선모반',
+    A08: '화염상모반',
+    A09: '영아혈관종',
+    B01: '건선',
+    B02: '두드러기',
+    B03: '여드름(태열)',
+    B04: '아토피 피부염',
+    B05: '만성 단순태선 및 양진',
+    B06: '동전습진',
+    C01: '단순 헤르페스',
+    C02: '수두',
+    C03: '물사마귀',
+    C04: '농가진',
+    C05: '어루러기',
+    C06: '백선',
+    C07: '수족구',
+    D01: '백반증',
+    D02: '소아황색 육아종',
+    D03: '흑색선조',
+    D04: '켈로이드',
+    D05: '비만세포종',
+    D06: '선상태선',
+    D07: '영아 지루 피부염',
+    D08: '땀띠',
 };
 
 // 모델 불러오기
@@ -61,17 +61,6 @@ async function loadModel() {
     }
 }
 
-// 모델의 레이어 정보 출력
-// function printLayers(model) {
-//     console.log('Model Layers:');
-//     if (model.layers) {
-//         model.layers.forEach((layer, index) => {
-//             console.log(`Layer ${index + 1}: ${layer.name} - Shape: ${JSON.stringify(layer.outputShape)}`);
-//         });
-//     } else {
-//         console.log('No layers found in the model.');
-//     }
-// }
 // 이미지 전처리
 async function preprocessImage(imageBuffer) {
     // 이미지를 uint8 텐서로 디코딩
