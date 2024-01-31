@@ -1,0 +1,13 @@
+{
+    "name": "ASOPI",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "concurrently \"cd ASOPI_FE && npm install && npm start\" \"cd ASOPI_BE && npm install && npm start\""
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+}
