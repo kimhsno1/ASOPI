@@ -74,9 +74,9 @@
 #### 🐸 김형석
 
 - 백엔드 
-  - 전체 페이지
-
-서버 연결
+  - 백엔드 모델 연결
+  - 회원 가입, 로그인, 웹서버 연결 코딩
+  - 디비 생성 및 연결
 
 <br>
 
@@ -90,7 +90,14 @@
 - 디자인 <img src="https://img.shields.io/badge/figma -F24E1E?style=for-the-badge&logo=figma&logoColor=white">
   <br>
   
+## 4-1. 서비스 아키텍쳐
+
+
+<br>
+
 ## 5. 프로젝트 구조
+전체구조: https://github.com/kimhsno1/ASOPI/issues/3#issue-2109363695
+
 ``` bash
 C:.
 ├─.ipynb_checkpoints
@@ -293,3 +300,18 @@ C:.
 - 로그인 후 URL에 아이디와 패스워드가 노출됨.
 - 비밀번호가 일치해도 백엔드로 넘어가지 못하는 문제 발생 즉, 로그인이 성공하지 못함. 
 >- 해결방안: 백엔드 엔드포인트 절대경로로 설정
+
+
+ 
+<br>
+
+## 9. 프로젝트 기간
+
+
+- 프로젝트 기간: 2024.1.8 ~ 2024.2.13
+
+- [WBS 일정 관리](https://docs.google.com/spreadsheets/d/1Fmqh2wlDSm3Fi7wS1yaInw9OP3layi3K6aHE79gkuOg/edit?usp=sharing)   
+
+<br>
+
+## 10. 프로젝트 후기
