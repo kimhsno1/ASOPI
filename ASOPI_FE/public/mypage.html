@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>마이페이지</title>
+        <link rel="stylesheet" href="mypage.css" />
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    </head>
+
+    <body>
+        <header>
+            <div id="logo" onclick="to_main()">
+                <img src="./image/asopi_logo.png" alt="로고" width="50%" />
+            </div>
+        </header>
+        <div class="head-container">
+            <h2 id="title">안녕하세요 <span id="username"></span>님</h2>
+            <h3 id="email"></h3>
+        </div>
+
+        <div class="button-container"></div>
+        <div class="container">
+            <div class="btn-box" style="text-align: left">
+                <h2 id="title2" style="display: inline-block">진단내역보기</h2>
+                <button id="btn-close-all" style="display: inline-block">모두 닫기</button>
+            </div>
+            <table>
+                <thead></thead>
+                <tbody id="diagnosisRecords">
+                    <!-- 진단 기록이 여기에 동적으로 추가됩니다 -->
+                </tbody>
+            </table>
+        </div>
+        <div class="button-container">
+            <div id="hospital-button" onclick="navigateToMap()">
+                내 주변 병원 보러 가기 &nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                〉
+            </div>
+            <div id="story-button" onclick="openModal()">
+                우리 아이가 쓰는 연고 괜찮을까?
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                〉
+            </div>
+        </div>
+
+        <!-- 모달 -->
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <!-- 모달 내용 -->
+                <div id="modal_title">
+                    <p id="close" onclick="closeModal()">&times;</p>
+                    <p id="modal-text">어떤 연고가 궁금하신가요?</p>
+                </div>
+                <button id="no1" onclick="handleButtonClick(1)">상처에 바르는 연고(후시딘)</button>
+                <button id="no2" onclick="handleButtonClick(2)">가려움증에 바르는 연고</button>
+                <button id="no3" onclick="handleButtonClick(3)">곰팜이성 피부 질환에 바르는 연고</button>
+                <button id="no4" onclick="handleButtonClick(4)">단순 포진에 바르는 연고</button>
+            </div>
+        </div>
+
+        <script>
+            const backendUrl = 'http://localhost:3001';
+            const mypageEndpoint = '/mypage/:email';
+
+            const mypageUrl = backendUrl + mypageEndpoint;
+
+            window.onload = async function () {
+                try {
+                    // 사용자 정보를 가져옵니다.
+                    const userInfo = await fetchUserInfo();
+                    console.log(userInfo);
+                    const userName = localStorage.userName;
+                    console.log(userName);
+                    const userEmail = localStorage.userEmail;
+                    console.log(userEmail);
+
+                    // 사용자 정보가 있는 경우 페이지에 반영합니다.
+                    if (userInfo) {
+                        document.getElementById('username').textContent = userName + '님';
+                        document.getElementById('email').textContent = userEmail;
+                    } else {
+                        console.log('User info not available.');
+                    }
+
+                    // 진단 내역에 데이터를 삽입합니다.
+                    displayDiagnosisRecords();
+                } catch (error) {
+                    console.error('Error loading user info:', error);
+                }
+
+                // Accordion 기능 추가
+                const $accordion = document.querySelectorAll('.accordion-container');
+                const $accordionContent = document.querySelectorAll('.accordion-content');
+                const $closeBtn = document.querySelector('#btn-close-all');
+
+                for (let i = 0; i < $accordion.length; i++) {
+                    $accordion[i].addEventListener('click', () => {
+                        $accordionContent[i].classList.add('active');
+                    });
+                }
+
+                $closeBtn.addEventListener('click', () => {
+                    for (const element of $accordionContent) {
+                        element.classList.remove('active');
+                    }
+                });
+            };
+
+            // 사용자 정보를 가져오는 함수
+            async function fetchUserInfo() {
+                try {
+                    const email = await localStorage.userEmail;
+                    const token = await localStorage.userToken;
+                    const response = await axios.get(mypageUrl, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            email: email,
+                        },
+                    }); // 사용자 정보를 가져오는 API 엔드포인트
+                    console.log(response);
+                    return response; // 가져온 사용자 정보를 반환
+                } catch (error) {
+                    console.error('Error fetching user info:', error);
+                    return null;
+                }
+            }
+
+            // 진단 내역에 데이터를 삽입하는 함수
+            function displayDiagnosisRecords() {
+                const data = fetchUserInfo();
+                // 진단 기록 동적 생성
+                const diagnosisRecords = document.getElementById('diagnosisRecords');
+
+                // 예시 데이터로 진단 기록 추가
+                const diagnoses = [
+                    {
+                        date: data.date,
+                        childName: data.childName,
+                        childAge: data.childAge,
+                        disease: data.disease,
+                        description: data.description,
+                    },
+                    {
+                        date: '2023.12.03',
+                        childName: '윤져의',
+                        childAge: '3세',
+                        disease: '알레르기',
+                        description: '알레르기는 ~!~!',
+                    },
+                    {
+                        date: '2023.3.03',
+                        childName: '염염이',
+                        childAge: '5세',
+                        disease: '땀띠',
+                        description: '땀띠는 ~~~',
+                    },
+                    {
+                        date: '2023.2.05',
+                        childName: '염염이',
+                        childAge: '5세',
+                        disease: '땀띠',
+                        description: '발진은 ~~~',
+                    },
+                ];
+
+                diagnoses.forEach((diagnosis, index) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+              <td>></td>
+              <td>
+                  <div class="accordion-container">
+                      <h3 class="accordion-title">진단기록${index + 1}</h3>
+                      <div class="accordion-content">
+                          <p>${diagnosis.date} <br> ${diagnosis.description}</p>
+                      </div>
+                  </div>
+              </td>
+              <td>${diagnosis.childName} ${diagnosis.childAge}</td>
+              <td>${diagnosis.disease}</td>
+          `;
+                    diagnosisRecords.appendChild(tr);
+                });
+            }
+
+            function navigateToMap() {
+                // Redirect to map.html
+                window.location.href = 'map.html';
+            }
+
+            // 모달 열기
+            function openModal() {
+                document.getElementById('myModal').style.display = 'block';
+            }
+
+            // 모달 닫기
+            function closeModal() {
+                document.getElementById('myModal').style.display = 'none';
+            }
+
+            // 모달 외부 클릭 시 닫기
+            window.onclick = function (event) {
+                var modal = document.getElementById('myModal');
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            };
+
+            function handleButtonClick(buttonNumber) {
+                var targetPageUrl = 'contents.html'; // 이동할 페이지의 URL
+                var targetElementId;
+
+                switch (buttonNumber) {
+                    case 1:
+                        targetElementId = '#head1'; // 이동할 요소의 ID
+                        break;
+                    case 2:
+                        targetElementId = '#head2'; // 이동할 요소의 ID
+                        break;
+                    case 3:
+                        targetElementId = '#head3'; // 이동할 요소의 ID
+                        break;
+                    case 4:
+                        targetElementId = '#head4'; // 이동할 요소의 ID
+                        break;
+                    default:
+                        // 기본 처리
+                        break;
+                }
+
+                // 새로운 페이지로 이동
+                window.location.href = targetPageUrl + targetElementId;
+            }
+
+            function sendTokenAndEmailToBackend() {
+                // 사용자의 토큰과 이메일을 로컬 스토리지에서 가져오기
+                const userToken = localStorage.getItem('userToken');
+                const userEmail = '사용자의 이메일 가져오는 방법'; // 사용자의 이메일을 가져오는 방법을 추가해야 합니다.
+
+                // Ajax를 사용하여 서버에 토큰과 이메일을 전송
+                $.ajax({
+                    type: 'POST',
+                    url: '토큰과이메일을보내는엔드포인트', // 실제 서버 URL로 대체 필요
+                    data: { token: userToken, email: userEmail },
+                    success: function (response) {
+                        console.log('서버 응답:', response);
+                        // 서버 응답에 따라 추가적인 작업 수행 가능
+                    },
+                    error: function (error) {
+                        console.error('오류 발생:', error);
+                    },
+                });
+            }
+        </script>
+    </body>
+</html>

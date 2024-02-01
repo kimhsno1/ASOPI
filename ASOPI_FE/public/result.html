@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>진단결과</title>
+        <link rel="stylesheet" href="result.css" />
+    </head>
+    <body>
+        <header>
+            <div id="logo" onclick="to_main()">
+                <img src="./image/asopi_logo.png" alt="로고" width="100%" />
+            </div>
+            <div id="mypage_logo" onclick="to_mypage()">
+                <img src="./image/mypage_icon.png" alt="마이페이지 아이콘" width="100%" />
+            </div>
+        </header>
+
+        <main class="result">
+            <section id="image">
+                <div id="diagnosis_result">
+                    <h2>감지한 병변</h2>
+                    <img id="resultImage" src="" alt="진단 이미지" />
+                </div>
+            </section>
+
+            <br />
+
+            <section id="result">
+                <div id="title">
+                    <p id="result-title">진단 결과</p>
+                </div>
+                <div id="result_contents">
+                    <p id="childNameDisplay"></p>
+                    <br />
+                    <p id="childAgeDisplay"></p>
+                </div>
+            </section>
+
+            <br />
+            <br />
+
+            <div id="map_button">
+                <button class="map_button" type="button" onclick="to_map()">집 근처 병원 보러 가기</button>
+            </div>
+
+            <div id="return_button">
+                <button class="return_button" type="button" onclick="to_main()">다시 진단하기</button>
+            </div>
+        </main>
+
+        <!-- <script src="script.js"></script> -->
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+            const backendUrl = 'http://localhost:3001';
+            const resultEndpoint = '/tf/saveResult';
+
+            const resultUrl = backendUrl + resultEndpoint;
+
+            // 로컬 스토리지에서 이미지 데이터를 가져와서 img 요소에 표시하고 정보 읽어오기
+            window.onload = async function () {
+                try {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    // 'result' 쿼리 매개변수 값 가져오기
+                    const resultValue = urlParams.get('result');
+                    // 추출한 값 사용 예시 (예: 콘솔에 출력)
+                    console.log('Result Value:', resultValue);
+
+                    var imageUrl = localStorage.getItem('uploadedImage');
+                    if (imageUrl) {
+                        document.getElementById('resultImage').src = imageUrl;
+                    }
+
+                    // 사용자 정보를 가져와서 화면에 표시
+                    const userData = await fetchUserDataFromLocalStorage();
+                    displayUserData(userData);
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            };
+
+            // 사용자가 입력한 정보를 로컬 스토리지에서 가져옵니다.
+            async function fetchUserDataFromLocalStorage() {
+                const childName = localStorage.getItem('childName') || '정보 없음';
+                const childAge = localStorage.getItem('childAge') || '정보 없음';
+                const disease = localStorage.getItem('disease');
+                const symptom = localStorage.getItem('symptom');
+                const desc = localStorage.getItem('desc');
+
+                return {
+                    childName: childName,
+                    childAge: childAge,
+                    disease: disease,
+                    symptom: symptom,
+                    desc: desc,
+                };
+            }
+
+            // 사용자 정보를 화면에 표시합니다.
+            function displayUserData(userData) {
+                document.getElementById('childNameDisplay').textContent = '아이 이름 : ' + userData.childName;
+                document.getElementById('childAgeDisplay').textContent = '아이 나이 : ' + userData.childAge;
+            }
+
+            // 사용자가 확인 버튼을 클릭하면 호출되는 함수입니다.
+
+            /* 질병 정보 디비에서 가져오기*/
+            async function fetchDataFromBackend() {
+                try {
+                    const userEmail = localStorage.userEmail;
+                    const response = await axios.get(resultUrl, {
+                        headers: {
+                            Authorization: `Bearer ${userEmail}`,
+                        },
+                    });
+                    const data = await response.json();
+                    console.log(data);
+                    return data;
+                } catch (error) {
+                    console.error('Error fetching data from backend:', error);
+                    return null;
+                }
+            }
+
+            async function displayDiseaseInfo() {
+                try {
+                    const diseaseData = await fetchDataFromBackend();
+                    if (diseaseData) {
+                        const diseaseName = diseaseData.name;
+                        const diseaseDescription = diseaseData.description;
+                        const diseaseSymptoms = diseaseData.symptoms;
+
+                        // 질환명을 HTML에 표시
+                        const nameElement = document.createElement('h3');
+                        nameElement.textContent = '질환명: ' + diseaseName;
+                        document.getElementById('result_contents').appendChild(nameElement);
+
+                        // 질환 설명을 HTML에 표시
+                        const descriptionElement = document.createElement('p');
+                        descriptionElement.textContent = '질환 설명: ' + diseaseDescription;
+                        document.getElementById('result_contents').appendChild(descriptionElement);
+
+                        // 질환 증상을 HTML에 표시
+                        const symptomsList = document.createElement('ul');
+                        diseaseSymptoms.forEach((symptom) => {
+                            const symptomItem = document.createElement('li');
+                            symptomItem.textContent = symptom;
+                            symptomsList.appendChild(symptomItem);
+                        });
+                        document.getElementById('result_contents').appendChild(symptomsList);
+                    } else {
+                        console.log('Failed to fetch disease information.');
+                    }
+                } catch (error) {
+                    console.error('Error displaying disease info:', error);
+                }
+            }
+
+            // displayDiseaseInfo 함수를 호출하여 데이터를 가져와 화면에 표시합니다.
+            displayDiseaseInfo();
+
+            function to_main() {
+                window.location.href = 'main.html';
+            }
+
+            function to_mypage() {
+                window.location.href = 'mypage.html';
+            }
+
+            function to_map() {
+                window.location.href = 'map.html';
+            }
+
+            function sendTokenAndEmailToBackend() {
+                // 사용자의 토큰과 이메일을 로컬 스토리지에서 가져오기
+                const userToken = localStorage.getItem('userToken');
+                const userEmail = '사용자의 이메일 가져오는 방법'; // 사용자의 이메일을 가져오는 방법을 추가해야 합니다.
+
+                // Ajax를 사용하여 서버에 토큰과 이메일을 전송
+                $.ajax({
+                    type: 'POST',
+                    url: '토큰과이메일을보내는엔드포인트', // 실제 서버 URL로 대체 필요
+                    data: { token: userToken, email: userEmail },
+                    success: function (response) {
+                        console.log('서버 응답:', response);
+                        // 서버 응답에 따라 추가적인 작업 수행 가능
+                    },
+                    error: function (error) {
+                        console.error('오류 발생:', error);
+                    },
+                });
+            }
+        </script>
+    </body>
+</html>

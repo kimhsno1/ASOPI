@@ -1,0 +1,32 @@
+<!-- result.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Result Page</title>
+    </head>
+    <body>
+        <h1>결과</h1>
+        <div id="result-container"></div>
+        <button id="diagnoseButton">다시 진단하기</button>
+
+        <script>
+            // 쿼리 파라미터에서 result 값을 가져오기
+            const urlParams = new URLSearchParams(window.location.search);
+            const result = urlParams.get('result');
+
+            // 가져온 result 값을 페이지에 출력
+            const resultContainer = document.getElementById('result-container');
+            resultContainer.textContent = `감지된 병변: ${result}`;
+
+            // "다시 진단하기" 버튼 생성 및 이벤트 리스너 추가
+            const diagnoseButton = document.getElementById('diagnoseButton');
+            diagnoseButton.addEventListener('click', function () {
+                // "diagnosis.html"로 이동
+                window.location.href = 'diagnosis.html';
+            });
+        </script>
+    </body>
+</html>

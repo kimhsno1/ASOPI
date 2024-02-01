@@ -1,0 +1,186 @@
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>회원가입</title>
+        <link rel="stylesheet" href="signup.css" />
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    </head>
+    <body>
+        <header>
+            <div id="logo">
+                <a href="main.html">
+                    <img src="./image/asopi_logo.png" alt="로고" width="100%" />
+                </a>
+            </div>
+        </header>
+
+        <form id="signup_form" onsubmit="return signupUser(event)">
+            <div id="name">
+                <label for="nickname">이름/닉네임</label>
+                <input type="text" id="nickname" name="nickname" required />
+            </div>
+
+            <div id="email_section">
+                <label for="user_email">이메일</label>
+                <input type="email" id="user_email" name="email" required />
+            </div>
+
+            <div class="register1" height="30">
+                <label for="register1"
+                    >비밀번호
+                    <span id="pw_condition">영문자, 숫자, 특수문자 포함 8~16자</span>
+                </label>
+                <td><input type="password" name="wUserPW" id="pw" onchange="isSame()" required /></td>
+            </div>
+
+            <div class="register2" height="30">
+                <label for="register2">비밀번호 확인</label>
+                <td>
+                    <input type="password" name="wUserPWConfirm" id="pwCheck" onchange="isSame()" required /><br /><span
+                        id="same"
+                    ></span>
+                </td>
+            </div>
+
+            <label for="birth">생년월일</label>
+            <div id="birthdate">
+                <!-- BIRTH_YY -->
+                <div id="bir_yy">
+                    <span class="box">
+                        <input
+                            type="text"
+                            id="yy"
+                            class="int"
+                            maxlength="4"
+                            placeholder="년(4자)"
+                            onblur="validateYear()"
+                            required
+                        />
+                    </span>
+                </div>
+                <!-- BIRTH_MM -->
+                <div id="bir_mm">
+                    <span class="box">
+                        <select id="mm" class="sel" required>
+                            <option value="" disabled selected hidden>월</option>
+                            <option value="01">1</option>
+                            <option value="02">2</option>
+                            <option value="03">3</option>
+                            <option value="04">4</option>
+                            <option value="05">5</option>
+                            <option value="06">6</option>
+                            <option value="07">7</option>
+                            <option value="08">8</option>
+                            <option value="09">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                    </span>
+                </div>
+                <!-- BIRTH_DD -->
+                <div id="bir_dd">
+                    <span class="box">
+                        <input
+                            type="text"
+                            id="dd"
+                            class="int"
+                            maxlength="2"
+                            placeholder="일"
+                            oninput="validateDay()"
+                            required
+                        />
+                    </span>
+                </div>
+            </div>
+            <!-- GENDER -->
+            <div>
+                <p class="join_title"><label for="gender">성별</label></p>
+                <span class="box gender_code">
+                    <select id="gender" class="sel" required>
+                        <option value="" disabled selected hidden>성별</option>
+                        <option value="M">남성</option>
+                        <option value="F">여성</option>
+                    </select>
+                </span>
+            </div>
+            <button type="submit" id="signup_button">가입하기</button>
+        </form>
+        <script>
+            const backendUrl = 'http://localhost:3001';
+            const signupEndpoint = '/signup';
+
+            const signupUrl = backendUrl + signupEndpoint;
+
+            function isSame() {
+                var pw = document.getElementById('pw').value;
+                var confirmPW = document.getElementById('pwCheck').value;
+                if (
+                    pw.length < 8 ||
+                    pw.length > 16 ||
+                    !/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*_])[A-Za-z\d!@#$%^&*_]{8,16}$/.test(pw)
+                ) {
+                    window.alert('영문자, 숫자, 특수문자를 포함한 8~16자로 입력하세요.');
+                    document.getElementById('pw').value = document.getElementById('pwCheck').value = '';
+                    document.getElementById('same').innerHTML = '';
+                }
+                if (document.getElementById('pw').value !== '' && document.getElementById('pwCheck').value !== '') {
+                    if (document.getElementById('pw').value === document.getElementById('pwCheck').value) {
+                        document.getElementById('same').innerHTML = '비밀번호가 일치합니다.';
+                        document.getElementById('same').style.color = 'blue';
+                    } else {
+                        document.getElementById('same').innerHTML = '비밀번호가 일치하지 않습니다.';
+                        document.getElementById('same').style.color = 'red';
+                    }
+                }
+            }
+            function validateYear() {
+                var year = document.getElementById('yy').value;
+                if (year !== '' && (year.length !== 4 || isNaN(year))) {
+                    alert('4자리 숫자로 입력하세요.');
+                    document.getElementById('yy').value = '';
+                }
+            }
+            function validateDay() {
+                var day = document.getElementById('dd').value;
+                if (day.length > 2 || isNaN(day) || day < 1 || day > 31) {
+                    alert('1~31 사이의 숫자로 입력하세요.');
+                    document.getElementById('dd').value = '';
+                }
+            }
+            function signupUser(event) {
+                event.preventDefault();
+                const nickname = $('#nickname').val();
+                const email = $('#user_email').val();
+                const password = $('#pw').val();
+                const birthYear = $('#yy').val();
+                const birthMonth = $('#mm').val();
+                const birthDay = $('#dd').val();
+                const birth = birthYear + birthMonth + birthDay;
+                const gender = $('#gender').val();
+                // AJAX 요청
+                $.ajax({
+                    type: 'POST',
+                    url: signupUrl,
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        nickname: nickname,
+                        email: email,
+                        password: password,
+                        birth: birth,
+                        gender: gender,
+                    }),
+                    success: function () {
+                        alert('회원가입 성공! 로그인 페이지로 이동합니다.');
+                        window.location.href = 'login.html';
+                    },
+                    error: function () {
+                        alert('회원가입 실패. 다시 시도해주세요.');
+                    },
+                });
+                return false;
+            }
+        </script>
+    </body>
+</html>

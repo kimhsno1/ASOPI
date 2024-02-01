@@ -1,0 +1,485 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* {
+  background-color: #FEFDF1;
+} /*배경_색*/
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: #FEFDF1;
+}
+
+header {
+  width: 350px;
+  height: 45px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.logo {
+  width: 100px;
+  height: auto;
+  display: flex;
+  margin-right: auto;
+}
+
+#logo img {
+  width: 90px;
+  height: auto;
+  margin-top:5px;
+  padding:5px;
+  justify-content: center;
+  align-items: center;
+  margin-left:5px;
+}
+
+#mypage_logo {
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  width:28px;
+  padding-left:50px;
+  margin-right:10px;
+}
+
+
+/*설명 박스*/
+#information_box {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  width: 320px;
+  height: auto;
+  margin: 5px auto;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  border-radius: 15px; 
+  color: #FEFDF1;
+  background-color:#474133 ;
+  font-family: 'Noto Sans KR', sans-serif;
+  box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.2);
+}
+
+#text_title {
+  font-size:30px;
+}
+
+#chlid_info {
+  width: 320px;
+  height: 179px;
+  border: #474133;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color:#474133;
+  border-radius: 15px; 
+  margin: auto;
+  box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.2);
+}
+
+
+/*이미지 업로드 버튼*/
+#fileUploader {
+  text-align: center;
+}
+
+/*
+.fileUploader {
+  background-color: #474133;
+  border-radius: 23px;
+  border: 1px solid #ffffff;
+  display: block;
+  cursor: pointer;
+  color: #FEFDF1;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 20px 60px;
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #6e6e50;
+  text-align: center;
+}
+*/
+.fileUploader:hover {
+  background-color: #cfc3a6;
+}
+
+.fileUploader:active {
+  position: relative;
+  top: 1px;
+}
+
+
+#fileUploader{
+  display: none;
+  flex-direction: row; /* 가로로 나열되도록 설정 */
+}
+
+
+
+.fileUploader {
+  background-color: #474133;
+  border-radius: 23px;
+  border: 1px solid #ffffff;
+  display: inline-block;
+   /* 수직 중앙 정렬 추가 */
+   /* 수평 중앙 정렬 추가 */
+  cursor: pointer;
+  color: #FEFDF1;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 18px;
+  /* font-weight: bold; */
+  margin-bottom: 50px;
+  text-decoration: none;
+  width: 280px;
+  height: 60px;
+  line-height: 55px;
+  box-sizing: border-box;
+  vertical-align: top;
+  text-align: center;
+  padding: 0;
+  text-shadow: none;
+}
+
+
+
+
+/*유의사항*/
+#picture_tip {
+  width: 320px;
+  height:auto;
+  text-align: center;
+  padding:10px ;
+  margin-left: 20px;
+  margin-right: 20px;
+  color: #474133;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+hr {
+  width : 375px;
+  height : 3px;
+  background-color: #ECECEC ;
+  border: 0;
+}
+
+/*진단 시작하기 버튼*/
+#diagnosis_button {
+  text-align: center;
+}
+
+.diagnosis_button {
+  background-color: #474133;
+  border-radius: 23px;
+  border: 1px solid #ffffff;
+  display: inline-block;
+   /* 수직 중앙 정렬 추가 */
+   /* 수평 중앙 정렬 추가 */
+  cursor: pointer;
+  color: #FEFDF1;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 16px;
+  /* font-weight: bold; */
+  margin-bottom: 80px;
+  text-decoration: none;
+  width: 280px;
+  height: 55px;
+  box-sizing: border-box;
+  vertical-align: top;
+  text-align: center;
+  padding: 0;
+  text-shadow: none;
+}
+
+.diagnosis_button:hover {
+  background-color: #cfc3a6;
+}
+
+.diagnosis_button:active {
+  position: relative;
+  top: 1px;
+}
+
+.left {
+  text-align: left;
+}
+
+.center {
+  text-align: center;
+}
+
+#saveMessage {
+  color: #474133; /* 메시지 색상을 설정할 수 있습니다. */
+  margin-top: 30px; /* 메시지와 다른 요소 사이의 간격을 설정할 수 있습니다. */
+  display: none;
+  text-align: center;
+
+}
+
+/*이미지 미리보기*/
+
+#previewImage_box {
+  /*display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;*/
+  width: 350px;
+  /* height: 300px; */
+  margin: 10px auto;
+  text-align: center;
+  padding: 20px;
+  color: #cfc3a6;
+  background-size: cover;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+#previewImage_box > div {
+  text-align: center;
+  width: 300px;
+  height: 300px;
+  margin: 0 auto 20px;
+  overflow: hidden;
+  border-radius: 15px; 
+}
+
+/*div#previewImageWrap {} */
+
+#previewImage_box > div img {
+  object-fit: cover;
+  border-radius: 15px; 
+  /*display: none;*/
+}
+
+
+#previewImage_box label.uploaded {
+  margin-right: 20px; /* 버튼 간 오른쪽으로 10px 간격 설정 */
+}
+
+#previewImage_box label.uploaded {
+  display: none;
+}
+/*업로드 취소 버튼*/
+#cancelButton {
+  background-color: #474133;
+  border-radius: 23px;
+  border: 1px solid #ffffff;
+  display: inline-block;
+   /* 수직 중앙 정렬 추가 */
+   /* 수평 중앙 정렬 추가 */
+  cursor: pointer;
+  color: #FEFDF1;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 16px;
+  /* font-weight: bold; */
+  text-decoration: none;
+  width: 280px;
+  height: 55px;
+  box-sizing: border-box;
+  vertical-align: top;
+  text-align: center;
+  padding: 0;
+  text-shadow: none;
+}
+
+#cancelButton:hover {
+  background-color: #cfc3a6;
+  border: 1px solid #cfc3a6; 
+}
+
+#cancelButton:active {
+  position: relative;
+  top: 1px;
+  border: 1px solid #ffffff;
+}
+
+
+/*경고 모달창*/
+#modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+#modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+#close-modal {
+  cursor: pointer;
+  color: #333;
+  text-decoration: underline;
+}
+
+
+/*진단 중 모달창*/
+#diagnosis-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  /* transform: translate(-50%, -50%); /* 추가: 화면 중앙으로 이동 */
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#diagnosis-modal-content {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #cfc3a6;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  width: 200px;
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 수직 중앙 정렬 추가 */
+  align-items: center; /* 수평 중앙 정렬 추가 */
+}
+
+/*로딩 애니메이션*/
+        @keyframes rotate-loading {
+            0%  {transform: rotate(0deg);-ms-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg); -moz-transform: rotate(0deg);}
+            100% {transform: rotate(360deg);-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); -o-transform: rotate(360deg); -moz-transform: rotate(360deg);}
+        }
+
+        @-moz-keyframes rotate-loading {
+            0%  {transform: rotate(0deg);-ms-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg); -moz-transform: rotate(0deg);}
+            100% {transform: rotate(360deg);-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); -o-transform: rotate(360deg); -moz-transform: rotate(360deg);}
+        }
+
+        @-webkit-keyframes rotate-loading {
+            0%  {transform: rotate(0deg);-ms-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg); -moz-transform: rotate(0deg);}
+            100% {transform: rotate(360deg);-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); -o-transform: rotate(360deg); -moz-transform: rotate(360deg);}
+        }
+
+        @-o-keyframes rotate-loading {
+            0%  {transform: rotate(0deg);-ms-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg); -moz-transform: rotate(0deg);}
+            100% {transform: rotate(360deg);-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); -o-transform: rotate(360deg); -moz-transform: rotate(360deg);}
+        }
+
+        @keyframes rotate-loading {
+            0%  {transform: rotate(0deg);-ms-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg); -moz-transform: rotate(0deg);}
+            100% {transform: rotate(360deg);-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); -o-transform: rotate(360deg); -moz-transform: rotate(360deg);}
+        }
+
+        @-moz-keyframes rotate-loading {
+            0%  {transform: rotate(0deg);-ms-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg); -moz-transform: rotate(0deg);}
+            100% {transform: rotate(360deg);-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); -o-transform: rotate(360deg); -moz-transform: rotate(360deg);}
+        }
+
+        @-webkit-keyframes rotate-loading {
+            0%  {transform: rotate(0deg);-ms-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg); -moz-transform: rotate(0deg);}
+            100% {transform: rotate(360deg);-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); -o-transform: rotate(360deg); -moz-transform: rotate(360deg);}
+        }
+
+        @-o-keyframes rotate-loading {
+            0%  {transform: rotate(0deg);-ms-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg); -moz-transform: rotate(0deg);}
+            100% {transform: rotate(360deg);-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); -o-transform: rotate(360deg); -moz-transform: rotate(360deg);}
+        }
+
+        @keyframes loading-text-opacity {
+            0%  {opacity: 0}
+            20% {opacity: 0}
+            50% {opacity: 1}
+            100%{opacity: 0}
+        }
+
+        @-moz-keyframes loading-text-opacity {
+            0%  {opacity: 0}
+            20% {opacity: 0}
+            50% {opacity: 1}
+            100%{opacity: 0}
+        }
+
+        @-webkit-keyframes loading-text-opacity {
+            0%  {opacity: 0}
+            20% {opacity: 0}
+            50% {opacity: 1}
+            100%{opacity: 0}
+        }
+
+        @-o-keyframes loading-text-opacity {
+            0%  {opacity: 0}
+            20% {opacity: 0}
+            50% {opacity: 1}
+            100%{opacity: 0}
+        }
+        .loading-container,
+        .loading {
+            height: 100px;
+            position: relative;
+            width: 100px;
+            border-radius: 100%;
+            margin:0 auto;
+        }
+
+
+        .loading-container { margin: 40px auto }
+
+        .loading {
+            border: 2px solid transparent;
+            border-color: transparent #fff transparent #FFF;
+            -moz-animation: rotate-loading 1.5s linear 0s infinite normal;
+            -moz-transform-origin: 50% 50%;
+            -o-animation: rotate-loading 1.5s linear 0s infinite normal;
+            -o-transform-origin: 50% 50%;
+            -webkit-animation: rotate-loading 1.5s linear 0s infinite normal;
+            -webkit-transform-origin: 50% 50%;
+            animation: rotate-loading 1.5s linear 0s infinite normal;
+            transform-origin: 50% 50%;
+        }
+
+        /*로딩 애니메이션에 호버할 때 색
+        .loading-container:hover .loading {
+            border-color: transparent #E45635 transparent #E45635;
+        } */
+
+        .loading-container:hover .loading,
+        .loading-container .loading {
+            -webkit-transition: all 0.5s ease-in-out;
+            -moz-transition: all 0.5s ease-in-out;
+            -ms-transition: all 0.5s ease-in-out;
+            -o-transition: all 0.5s ease-in-out;
+            transition: all 0.5s ease-in-out;
+        }
+
+        #loading-text {
+            -moz-animation: loading-text-opacity 2s linear 0s infinite normal;
+            -o-animation: loading-text-opacity 2s linear 0s infinite normal;
+            -webkit-animation: loading-text-opacity 2s linear 0s infinite normal;
+            animation: loading-text-opacity 2s linear 0s infinite normal;
+            color: #6e6e50;
+            font-family: "Helvetica Neue, "Helvetica", ""arial";
+            font-size: 15px;
+            font-weight: bold;
+            margin-top: 45px;
+            opacity: 0;
+            position: absolute;
+            text-align: center;
+            text-transform: uppercase;
+            top: 0;
+            width: 100px;
+        }

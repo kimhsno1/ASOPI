@@ -1,0 +1,57 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>이미지 업로드 및 모델 결과</title>
+    </head>
+    <body>
+        <h1>이미지를 선택해주세요.</h1>
+        <form id="uploadForm" enctype="multipart/form-data" action="/tf/upload" method="post">
+            <input type="file" id="imageInput" name="image" accept="image/*" required />
+            <button type="submit" onclick="uploadImage()">Upload</button>
+        </form>
+        <div id="resultArea">
+            <img id="uploadedImage" src="" alt="Uploaded Image" />
+        </div>
+
+        <script>
+            async function uploadImage() {
+                const fileInput = document.getElementById('imageInput');
+                const formData = new FormData();
+                formData.append('image', fileInput.files[0]);
+
+                try {
+                    const response = await fetch('/tf/upload', {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        updateResult(result);
+                    } else {
+                        console.error('Image upload failed.');
+                    }
+                } catch (error) {
+                    console.error('Error during fetch:', error);
+                }
+            }
+
+            function updateResult(result) {
+                const resultArea = document.getElementById('resultArea');
+                const imageElement = document.getElementById('uploadedImage');
+
+                // 이미지 경로가 result 객체에 있다고 가정 (실제로는 서버 응답에 따라 구조가 달라질 수 있음)
+                const imagePath = result.image;
+
+                // 이미지를 표시하는 방식에 따라서, 이미지 경로를 직접 설정하거나 다른 방법을 사용할 수 있음
+                imageElement.src = imagePath;
+
+                // 텍스트로 모델 결과를 표시
+                resultArea.innerHTML = `모델 결과: ${result.modelResult}`;
+            }
+        </script>
+    </body>
+</html>

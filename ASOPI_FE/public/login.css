@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@200;400&display=swap');
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #fefdf1;
+}
+
+#logo {
+    margin: 0px 0px 0px 0px; /* adjust the top margin as needed */
+    width: 100%; /* adjust the width as needed */
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#logo img {
+    width: 200px; /* adjust the width as needed */
+    height: auto; /* this will maintain the aspect ratio of the image */
+    padding-bottom: 30px;
+}
+
+form {
+    width: 300px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+h2 {
+    text-align: center;
+    color: #474133;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/*
+ .form-group {
+    margin-bottom: 40px;
+ } */
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #6e6e50;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+input[type='text'],
+input[type='password'] {
+    width: 280px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+#login_button[type='submit'] {
+    background-color: #474133;
+    border-radius: 20px;
+    border: 1px solid #ffffff;
+    display: inline-block;
+    cursor: pointer;
+    color: #fefdf1;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 16px 100px;
+    margin-bottom: 20px;
+    text-decoration: none;
+    text-shadow: 0px 1px 0px #6e6e50;
+    margin-top: 30px;
+}
+
+#login_button[type='submit']:hover {
+    background-color: #cfc3a6;
+}
+
+.login_button:active {
+    position: relative;
+    top: 1px;
+}
+.signup_button_container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.singup_button {
+    border-radius: 23px;
+    background-color: #dbd7d0;
+    border: 0px solid #a4a48b;
+    cursor: pointer;
+    color: #474133;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    padding: 18px;
+    margin-bottom: 20px;
+    text-decoration: none;
+    display: block;
+    width: 300px;
+}
+
+.singup_button:hover {
+    background-color: #cfc3a6;
+    color: #474133;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+.singup_button:active {
+    position: relative;
+    top: 1px;
+}
+
+#kakao_button {
+    border-radius: 23px;
+    background-color: #f7e600;
+    border: 0px solid #a4a48b;
+    cursor: pointer;
+    color: #3a1d1d;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    padding: 18px;
+    margin-bottom: 100px;
+    text-decoration: none;
+    margin-top: 10px;
+    display: block;
+    width: 300px;
+}

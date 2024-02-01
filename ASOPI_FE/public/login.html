@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>login</title>
+        <link rel="stylesheet" href="login.css" />
+        <header>
+            <div id="logo">
+                <a href="main.html">
+                    <img src="./image/asopi_logo.png" alt="로고" width="100%" />
+                </a>
+            </div>
+        </header>
+        <style>
+            .modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                justify-content: center;
+                align-items: center;
+                font-family: 'Noto Sans KR', sans-serif;
+            }
+
+            .modal-content {
+                font-family: 'Noto Sans KR', sans-serif;
+                background-color: #fefefe;
+                padding: 20px;
+                border-radius: 10px;
+                text-align: center;
+                width: 300px;
+            }
+
+            .close {
+                cursor: pointer;
+                position: absolute;
+                top: 10px;
+                right: 10px;
+            }
+
+            .modal-buttons {
+                margin-top: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                font-family: 'Noto Sans KR', sans-serif;
+            }
+
+            .modal-buttons button {
+                margin: 10px 0 auto;
+                font-size: 16px;
+                padding: 10px; /* 버튼 크기 */
+                width: 100%; /* 버튼 너비 */
+                cursor: pointer;
+                background-color: #474133;
+                color: #fefdf1;
+                border: none;
+                border-radius: 5px;
+                font-family: 'Noto Sans KR', sans-serif;
+            }
+
+            .modal-buttons button:hover {
+                background-color: #6e6e50;
+                font-family: 'Noto Sans KR', sans-serif;
+            }
+            .welcome-message {
+                display: none;
+                font-size: 18px;
+                margin-top: 20px;
+                color: #474133;
+            }
+        </style>
+    </head>
+    <body>
+        <form id="login-form" onsubmit="return loginUser(event)">
+            <label for="email">ID</label>
+            <input type="text" id="email" name="email" placeholder="이메일 형식으로 입력해주세요." required />
+
+            <label for="password">Password</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="영문자, 숫자, 특수문자 포함 8~16자"
+                required
+            />
+
+            <button type="submit" id="login_button">로그인</button>
+
+            <div id="signup_button_container" class="signup_button_container"></div>
+            <button id="kakao_button" class="singup_button2" type="button" onclick="kakaoLogin()">
+                카카오계정으로 로그인/가입하기
+            </button>
+            <button id="signup_button" class="singup_button" type="button" onclick="goToSignup()">
+                계정이 없으신가요? &nbsp;간편가입하기
+            </button>
+        </form>
+
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <p>이용하실 서비스를 선택해주세요</p>
+                <div class="modal-buttons">
+                    <button onclick="goToMyPage()">마이페이지</button>
+                    <button onclick="goToDiagnosis()">진단하러 가기</button>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+            const backendUrl = 'http://localhost:3001';
+            const loginEndpoint = '/login';
+            const kakaoEndpoint = '/login/kakao';
+
+            const loginUrl = backendUrl + loginEndpoint;
+            const kakaoUrl = backendUrl + kakaoEndpoint;
+
+            function goToSignup() {
+                window.location.href = 'signup.html';
+            }
+
+            async function loginUser(event) {
+                event.preventDefault(); // 폼의 기본 동작 중단
+
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                try {
+                    // 클라이언트 측에서 로그인 처리
+                    const response = await axios.post(loginUrl, { email, password });
+
+                    console.log(response);
+
+                    const userData = response.data;
+
+                    const userEmail = userData.data.userEmail;
+                    const userName = userData.data.userName;
+                    const token = userData.data.token;
+                    console.log('클라이언트가 받은 토큰 : ', token);
+                    console.log('로컬 스토리지 : ', localStorage);
+
+                    if (!token) {
+                        alert('토큰이 서버 응답에 존재하지 않습니다.');
+                    } else {
+                        localStorage.setItem('userToken', token);
+                        localStorage.setItem('userEmail', userEmail);
+                        localStorage.setItem('userName', userName);
+                        await openModal();
+                    }
+                } catch (error) {
+                    // 로그인 실패 시 동작 (여기서는 알림창)
+                    alert('로그인 실패. 다시 시도하세요.', error);
+                }
+                return false;
+            }
+
+            //이메일을 토큰에 담아서 전송
+            /*function sendEmailToBackend(email) {
+                axios.post('/send-email', { email }); // 엔드포인트 수정 필요
+            }*/
+            function openModal() {
+                document.getElementById('myModal').style.display = 'flex';
+            }
+
+            function closeModal() {
+                document.getElementById('myModal').style.display = 'none';
+            }
+
+            async function goToMyPage() {
+                await closeModal(); // 일반 모달 닫기
+                // 마이페이지로 이동하는 동작 추가
+                window.location.href = 'mypage.html';
+            }
+
+            async function goToDiagnosis() {
+                await closeModal(); // 일반 모달 닫기
+                // 진단 페이지로 이동하는 동작 추가
+                window.location.href = 'diagnosis.html';
+            }
+
+            async function kakaoLogin() {
+                try {
+                    const response = await axios.get(kakaoUrl);
+                    console.log(response);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        </script>
+    </body>
+</html>

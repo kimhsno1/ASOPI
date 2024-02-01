@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>진단하기</title>
+  <link rel="stylesheet" href="diagnosis.css">
+</head>
+<body>
+  <header>
+    <div id="logo" onclick="to_main()">
+      <img src="./image/asopi_logo.png" alt="로고" width="100%">
+    </div>
+    <div id="mypage_logo" onclick="to_mypage()">
+      <img src="./image/mypage_icon.png" alt="마이페이지 아이콘" width="100%">
+    </div>
+  </header>
+  <main class="diagnosis">
+    <div id="information_box">
+      <div id="text_title">
+        <p class="left"> 사진 한 장으로 <br> 피부 질환 진단 받기 </p>
+      </div>
+      <div id="info_detail">
+        <p>진단 결과는 마이페이지에 기록됩니다.<br><br>
+          아이의 이름 혹은 별명<br>
+          그리고 나이를 입력하고, 시간에 따른<br>
+          진단 기록을 살펴보세요.</p>
+      </div>
+    </div>
+    <br>
+    <div id="chlid_info">
+      <form id="childForm" action="#" method="post">
+        <div id="form">
+          <label for="name">아이 이름/별명</label>
+          <br>
+          <input type="text" id="name" name="name" required>
+          <br><br>
+          <label for="age">나이/개월 수</label>
+          <br>
+          <select id="age" name="age" required>
+            <option value="" disabled selected hidden>나이를 선택하세요</option>
+            <option value="0~4개월">0~4개월</option>
+            <option value="5~9개월">5~9개월</option>
+            <option value="10~14개월">10~14개월</option>
+            <option value="15~19개월">15~19개월</option>
+            <option value="20~24개월">20~24개월</option>
+            <option value="3세">3세</option>
+            <option value="4세">4세</option>
+            <option value="5세">5세</option>
+            <option value="6세">6세</option>
+            <option value="7세 이상">7세 이상</option>
+          </select>
+          <input type="submit" value="저장하기">
+        </div>
+      </form>
+    </div>
+    <div id="saveMessage">
+      저장이 완료되었습니다.
+    </div>
+    <br>
+    <hr />
+    <div id="picture_tip">
+      <h3 class="center">※사진 촬영 시 유의 사항※</h3>
+      <p class="left">진단을 원하는 환부만 촬영해주세요.<br>
+        너무 가깝거나 너무 멀지 않아야 정확한 진단이 가능합니다.</p>
+    </div>
+    <form action="#" method="post">
+      <!-- 미리보기를 위한 이미지 태그 추가 -->
+      <div id="previewImage_box">
+        <div id="previewImageWrap">
+          <img id="previewImage" src="#" alt="업로드 된 이미지" style="width: 100%;">
+        </div>
+        <label class="fileUploader" for="chooseFile">사진 선택하기</label>
+        <input style="display:none;" type="file" id="chooseFile" name="chooseFile" accept="image/*"
+          onchange="loadFile(this)">
+        <button id="cancelButton" type="button" onclick="cancelUpload()" style="display: none;">업로드 취소</button>
+      </div>
+    </form>
+    <br>
+    <div id="diagnosis_button" style="display: none;">
+      <button class="diagnosis_button" type="button" onclick="sendChildInfoAndShowDiagnosisModal()">진단 시작하기</button>
+    </div>
+    <!-- 진단 중 모달 창 -->
+    <div id="diagnosis-modal" style="display: none;">
+      <div id="diagnosis-modal-content">
+        <!-- 로딩 애니메이션 -->
+        <div class="loading-container">
+          <div class="loading"></div>
+          <div id="loading-text">분석 중</div>
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      const backendUrl = 'http://localhost:3001';
+      const uploadEndpoint = '/tf/upload';
+      const resultSaveEndpoint = '/tf/saveResult';
+      const childInfoSaveEndpoint = '/tf/saveRecord';
+      const uploadUrl = backendUrl + uploadEndpoint;
+      const childSaveUrl = backendUrl + childInfoSaveEndpoint;
+      const resultSaveUrl = backendUrl + resultSaveEndpoint;
+      const userEmail = localStorage.userEmail;
+    // 병명, 증상, 설명 가져오는 함수
+    async function getDisease(modelResult){
+      try{
+        const response = await $.ajax({
+          type:'GET',
+          url:resultSaveUrl,
+          processData: false,
+          contentType: false,
+          success: function (response) {
+            console.log('서버 응답:', response);
+          },
+          error: function (error) {
+            console.error('오류 발생:', error);
+          }
+        })
+        const disease = response.disease;
+        const symptom = response.symptom;
+        const desc = response.description;
+        localStorage.setItem('disease', disease);
+        localStorage.setItem('symptom', symptom);
+        localStorage.setItem('desc', desc);
+        return response;
+      }catch(error){
+        console.error('병명을 못가져왓읍니다 :', error);
+        throw error;
+      }
+    }
+    /* 이미지 전송 함수 */
+    async function sendImageToServer(formData) {
+      try {
+        const modelResult = await $.ajax({
+          type: 'POST',
+          url: uploadUrl,
+          data: formData,
+          processData: false,
+          contentType: false,
+          headers: {
+            'Authorization': 'Bearer ' + userEmail
+          },
+          success: function (modelResult) {
+            console.log('서버 응답:', modelResult);
+          },
+          error: function (error) {
+            console.error('오류 발생:', error);
+          }
+        });;
+        return modelResult;
+      } catch (error) {
+        console.error('이미지 전송 오류:', error);
+        throw error;
+      }
+    }
+    /* 이미지 전송 후 처리 함수 */
+    async function sendImageAndRedirect(formData) {
+      try {
+        // 이미지 전송
+        await sendImageToServer(formData);
+        // Redirect to result.html after 3 seconds
+        setTimeout(function () {
+          window.location.href = 'result.html';
+        }, 3000);
+      } catch (error) {
+        console.error('이미지 전송 후 처리 중 오류:', error);
+        // 여기에서 추가적인 오류 처리 로직을 수행할 수 있습니다.
+      }
+    }
+    //아이 정보 + 토큰 서버에 전송
+    async function sendChildInfoWithToken() {
+    try {
+        // child_info에서 입력받은 정보 가져오기
+        var name = document.getElementById('name').value;
+        var age = document.getElementById('age').value;
+        // HTTP 요청 서버에 전송
+        const response = await axios.post(childSaveUrl, {
+          childName : name,
+          childAge : age
+        });
+        if (response.ok) {
+            console.log('아이 정보가 성공적으로 저장되었습니다.');
+            // 저장 완료 메시지 표시 또는 다른 동작 수행
+        } else {
+            console.error('아이 정보 저장에 실패했습니다.');
+            // 에러 처리 또는 다른 동작 수행
+        }
+    } catch (error) {
+        console.error('Error saving child info:', error);
+    }
+}
+  /* 모달창 표시 함수 */
+  function showDiagnosisModal() {
+    // Check if a file is uploaded
+    var fileInput = document.getElementById('chooseFile');
+    if (fileInput.files.length === 0) {
+      // Show 'Please upload a photo first' modal
+      openModal();
+    } else {
+      // Show 'Diagnosis in progress' modal
+      var diagnosisModal = document.getElementById('diagnosis-modal');
+      diagnosisModal.style.display = 'block';
+      // Save uploaded image URL to local storage
+      var imageUrl = document.getElementById('previewImage').src;
+      localStorage.setItem('uploadedImage', imageUrl);
+      // Create FormData object to send image data
+      var formData = new FormData();
+      var file = fileInput.files[0];
+      formData.append('image', file);
+      // 이미지를 서버로 전송
+      sendImageAndRedirect(formData);
+    }
+  }
+  // 토큰, 아이 정보, 이미지 전송 및 모달창 표시
+  async function sendChildInfoAndShowDiagnosisModal() {
+    try {
+      // 이미지 전송 및 모달창 표시
+      await showDiagnosisModal();
+      // 아이 정보 전송
+      await sendChildInfoWithToken();
+      // 병명, 증상, 설명 불러오기 
+      await getDisease()
+    } catch (error) {
+      console.error('아이 정보 및 이미지 전송 중 오류:', error);
+      // 여기에서 추가적인 오류 처리 로직을 수행할 수 있습니다.
+    }
+  }
+    //프론트 함수
+      //아이 정보 로컬스토리지에 저장
+      document.getElementById('childForm').addEventListener('submit', async function (event) {
+        event.preventDefault(); // 기본 submit 동작 막기
+        // child_info에서 입력받은 정보 가져오기
+        var name = document.getElementById('name').value;
+        var age = document.getElementById('age').value;
+        // 로컬 스토리지에 정보 저장
+        localStorage.setItem('childName', name || '아이의 이름');
+        localStorage.setItem('childAge', age || '아이의 나이');
+        try {
+            // 저장 완료 메시지 표시
+            document.getElementById('saveMessage').style.display = 'block';
+        } catch (error) {
+            console.error('Error saving child info:', error);
+        }
+    });
+      //  이미지 업로드 전 - 이미지 프리뷰 박스 숨기기
+      document.getElementById('previewImageWrap').style.display = 'none';
+      // 이미지 업로드 전 - 진단하기 버튼 숨기기
+      document.getElementById('diagnosis_button').style.display = 'none';
+      function to_main() {
+        window.location.href = 'main.html'; // Update to the actual main page filename
+      }
+      function to_result() {
+        window.location.href = 'result.html';
+      }
+      function to_mypage() {
+        window.location.href = 'mypage.html';
+      }
+      function showCancelButton() {
+        // 파일이 업로드되었을 때만 버튼을 보여줌
+        var fileInput = document.getElementById('chooseFile');
+        if (fileInput.files.length > 0) {
+          document.getElementById('cancelButton').style.display = 'inline-block';
+        }
+      }
+      function loadFile(input) {
+      var previewImageWrap = document.getElementById('previewImageWrap');
+      var previewImage = document.getElementById('previewImage');
+      var fileUploader = document.querySelector('.fileUploader'); // 파일 업로더 요소 가져오기
+      var file = input.files[0];
+      if (file) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          // Update image preview
+          previewImage.src = e.target.result;
+          // Display the preview image
+          previewImageWrap.style.display = 'block';
+          // Add a class
+          fileUploader.className += ' uploaded';
+          // Show diagnosis button after an image is uploaded
+          document.getElementById('diagnosis_button').style.display = 'block';
+          // Show cancel upload button
+          showCancelButton();
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+      // 이미지 업로드 전 - 이미지 프리뷰 박스 숨기기
+      document.getElementById('previewImageWrap').style.display = 'none';
+      // 이미지 업로드 전 - 진단하기 버튼 숨기기
+      document.getElementById('diagnosis_button').style.display = 'none';
+      function cancelUpload() {
+        // Reset file input and hide cancel button
+        document.getElementById('chooseFile').value = '';
+        document.getElementById('cancelButton').style.display = 'none';
+        // Hide image preview
+        document.getElementById('previewImageWrap').style.display = 'none';
+        // Remove the class
+        document.querySelector('.fileUploader').classList.remove('uploaded');
+        // Hide diagnosis button
+        document.getElementById('diagnosis_button').style.display = 'none';
+      }
+        function openModal() {
+          document.getElementById('modal').style.display = 'flex';
+        }
+        function closeModal() {
+          document.getElementById('modal').style.display = 'none';
+        }
+        //이름 입력 안했을 때, 넘어가지 못하게
+        function validateAndOpenFileDialog(event) {
+          // 아이 이름과 나이 입력 필드 가져오기
+          var childName = document.getElementById('name').value;
+          var childAge = document.getElementById('age').value;
+          var saveBtn = document.getElementById('saveMessage');
+          // getComputedStyle를 사용하여 현재의 계산된 스타일 값을 가져오기
+          var saveBtnDisplay = window.getComputedStyle(saveBtn).display;
+          // 이름과 나이 중 하나라도 비어 있다면
+          if (!childName && !childAge) {
+            alert('아이 이름과 나이를 입력하세요.');
+            event.preventDefault(); // 기본 동작 취소
+            return;
+          } else if (!childName) {
+            alert('아이 이름을 입력하세요.');
+            event.preventDefault(); // 기본 동작 취소
+            return;
+          } else if (!childAge) {
+            alert('아이 나이를 입력하세요.');
+            event.preventDefault(); // 기본 동작 취소
+            return;
+          } else if (saveBtnDisplay === 'none') {
+            alert('저장버튼을 눌러주세요.');
+            event.preventDefault(); // 기본 동작 취소
+            return;
+          }
+        };
+        // 이벤트 리스너 등록
+        document.getElementById('previewImage_box').addEventListener('click', validateAndOpenFileDialog);
+      </script>
+    </div>
+  </main>
+</body>
+</html>
