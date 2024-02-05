@@ -58,6 +58,7 @@ tfServer.post('/upload', upload.single('image'), async (req, res) => {
         if (model) {
             model.dispose();
         }
+        return res.json({ modelResult });
     } catch (error) {
         console.error('모델이 정상적으로 작동하지 않았습니당.');
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -67,27 +68,42 @@ tfServer.post('/upload', upload.single('image'), async (req, res) => {
 // 출력된 결과를 함수에 넣어 병명 찾아오기
 tfServer.get('/saveResult', async (req, res) => {
     try {
-        const userEmail = req.headers.userEmail;
+        const userEmail = req.query.userEmail;
+        const result = req.query.modelResult;
+        const childName = req.query.childName;
+        const childAge = req.query.childAge;
         console.log('유저 이메일 : ', userEmail);
+        console.log('모델 결과 : ', result);
+        console.log('아이 이름 : ', childName + '아이 나이 : ', childAge);
         // 병명 찾기
-        const disease = await database.getDisease(modelResult);
+        const disease = await database.getDisease(result);
+        console.log('병명 : ', disease);
         // 증상 찾기
-        const symptom = await database.getSymptom(modelResult);
+        const symptom = await database.getSymptom(result);
+        console.log('증상 : ', symptom);
         // 설명 찾기
-        const description = await database.getDescription(modelResult);
-        // 병명, 증상, 설명, 이메일을 유저 진단내역에 저장
-        await database.saveModelResult(disease, symptom, description, userEmail);
+        const description = await database.getDescription(result);
+        console.log('설명 : ', description);
+
         // json 형식으로 클라이언트에게 전달
-        return res.json({ disease, symptom, description });
+        res.json({ disease, symptom, description });
+
+        // 병명, 증상, 설명, 이메일을 유저 진단내역에 저장
+        await database.saveModelResult(disease, symptom, description, userEmail, childName, childAge);
+        await database.deleteNullCol();
+
+        return;
     } catch (error) {
         console.error('can not load diesease and symptom:', error);
         res.status(500).json({ error: 'Failed to load diesease and symptom' });
     }
 });
 
+// 애 이름, 나이 저장.
 tfServer.post('/saveRecord', async (req, res) => {
-    const childAge = req.body.childAge;
-    const childName = req.body.childName;
+    const { childName, childAge } = req.body;
+    console.log('애 이름 : ', childName);
+    console.log('애 나이 : ', childAge);
 
     await database.saveChildInfo(childName, childAge);
 });

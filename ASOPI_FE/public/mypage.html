@@ -62,126 +62,103 @@
 
         <script>
             const backendUrl = 'http://localhost:3001';
-            const mypageEndpoint = '/mypage/:email';
+            const userEmail = localStorage.userEmail;
+            const mypageEndpoint = `/mypage/${userEmail}`;
 
             const mypageUrl = backendUrl + mypageEndpoint;
 
             window.onload = async function () {
                 try {
                     // 사용자 정보를 가져옵니다.
-                    const userInfo = await fetchUserInfo();
-                    console.log(userInfo);
+                    const userData = await fetchUserData();
+                    console.log('user data : ', userData);
                     const userName = localStorage.userName;
-                    console.log(userName);
                     const userEmail = localStorage.userEmail;
-                    console.log(userEmail);
 
                     // 사용자 정보가 있는 경우 페이지에 반영합니다.
-                    if (userInfo) {
-                        document.getElementById('username').textContent = userName + '님';
+                    if (userData) {
+                        document.getElementById('username').textContent = userName;
                         document.getElementById('email').textContent = userEmail;
+
+                        // 진료 기록을 화면에 표시합니다.
+                        displayDiagnosisRecords(userData.records, userData.recordDates);
                     } else {
                         console.log('User info not available.');
                     }
 
-                    // 진단 내역에 데이터를 삽입합니다.
-                    displayDiagnosisRecords();
-                } catch (error) {
-                    console.error('Error loading user info:', error);
-                }
+                    // Accordion 기능 추가
+                    const $accordion = document.querySelectorAll('.accordion-container');
+                    const $accordionContent = document.querySelectorAll('.accordion-content');
+                    const $closeBtn = document.querySelector('#btn-close-all');
 
-                // Accordion 기능 추가
-                const $accordion = document.querySelectorAll('.accordion-container');
-                const $accordionContent = document.querySelectorAll('.accordion-content');
-                const $closeBtn = document.querySelector('#btn-close-all');
-
-                for (let i = 0; i < $accordion.length; i++) {
-                    $accordion[i].addEventListener('click', () => {
-                        $accordionContent[i].classList.add('active');
-                    });
-                }
-
-                $closeBtn.addEventListener('click', () => {
-                    for (const element of $accordionContent) {
-                        element.classList.remove('active');
+                    for (let i = 0; i < $accordion.length; i++) {
+                        $accordion[i].addEventListener('click', () => {
+                            $accordionContent[i].classList.add('active');
+                        });
                     }
-                });
+
+                    $closeBtn.addEventListener('click', () => {
+                        for (const element of $accordionContent) {
+                            element.classList.remove('active');
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error loading user data:', error);
+                }
             };
 
             // 사용자 정보를 가져오는 함수
-            async function fetchUserInfo() {
+            async function fetchUserData() {
                 try {
-                    const email = await localStorage.userEmail;
-                    const token = await localStorage.userToken;
-                    const response = await axios.get(mypageUrl, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            email: email,
-                        },
-                    }); // 사용자 정보를 가져오는 API 엔드포인트
-                    console.log(response);
-                    return response; // 가져온 사용자 정보를 반환
+                    const response = await axios.get(mypageUrl);
+                    const userData = response.data;
+
+                    // record와 recordDate를 따로 추출
+                    const records = userData.data.record.map((record) => JSON.parse(record));
+                    console.log('기록 : ', records);
+                    const recordDates = userData.data.recordDate;
+                    console.log('진료 시각 : ', recordDates);
+
+                    return { records, recordDates };
                 } catch (error) {
                     console.error('Error fetching user info:', error);
                     return null;
                 }
             }
 
-            // 진단 내역에 데이터를 삽입하는 함수
-            function displayDiagnosisRecords() {
-                const data = fetchUserInfo();
+            // 진료 내역을 화면에 표시하는 함수
+            function displayDiagnosisRecords(userRecords, recordDates) {
                 // 진단 기록 동적 생성
                 const diagnosisRecords = document.getElementById('diagnosisRecords');
 
-                // 예시 데이터로 진단 기록 추가
-                const diagnoses = [
-                    {
-                        date: data.date,
-                        childName: data.childName,
-                        childAge: data.childAge,
-                        disease: data.disease,
-                        description: data.description,
-                    },
-                    {
-                        date: '2023.12.03',
-                        childName: '윤져의',
-                        childAge: '3세',
-                        disease: '알레르기',
-                        description: '알레르기는 ~!~!',
-                    },
-                    {
-                        date: '2023.3.03',
-                        childName: '염염이',
-                        childAge: '5세',
-                        disease: '땀띠',
-                        description: '땀띠는 ~~~',
-                    },
-                    {
-                        date: '2023.2.05',
-                        childName: '염염이',
-                        childAge: '5세',
-                        disease: '땀띠',
-                        description: '발진은 ~~~',
-                    },
-                ];
+                console.log('userRecords:', userRecords);
+                console.log('recordDates:', recordDates);
 
-                diagnoses.forEach((diagnosis, index) => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-              <td>></td>
-              <td>
-                  <div class="accordion-container">
-                      <h3 class="accordion-title">진단기록${index + 1}</h3>
-                      <div class="accordion-content">
-                          <p>${diagnosis.date} <br> ${diagnosis.description}</p>
-                      </div>
-                  </div>
-              </td>
-              <td>${diagnosis.childName} ${diagnosis.childAge}</td>
-              <td>${diagnosis.disease}</td>
-          `;
-                    diagnosisRecords.appendChild(tr);
-                });
+                if (userRecords && userRecords.length > 0) {
+                    userRecords.forEach((record, index) => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>></td>
+                            <td>
+                                <div class="accordion-container">
+                                    <h3 class="accordion-title">진단기록${index + 1}</h3>
+                                    <div class="accordion-content">
+                                        <p>${recordDates[index]} <br> 
+                                           질병: ${record.disease} <br> 
+                                           증상: ${record.symptom} <br> 
+                                           설명: ${record.description}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>${record.childName} ${record.childAge}</td>
+                            <td>${record.disease}</td>
+                        `;
+                        diagnosisRecords.appendChild(tr);
+                    });
+                } else {
+                    console.log('No diagnosis records available.');
+                    // TODO: 진단 기록이 없을 때의 처리를 추가하세요.
+                }
             }
 
             function navigateToMap() {

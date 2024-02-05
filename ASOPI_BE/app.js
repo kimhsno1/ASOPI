@@ -89,7 +89,7 @@ app.get('/login/kakao', async (req, res) => {
         );
         console.log(response.data);
         // Kakao API의 응답을 클라이언트에 전달
-        res.send(response);
+        res.json(response.data);
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error', error);
@@ -116,16 +116,17 @@ app.get('/oauth', async (req, res) => {
 });
 
 // 마이페이지
-app.get('/mypage/:email', async (req, res) => {
+app.get(`/mypage/:userEmail`, async (req, res) => {
     try {
-        const email = req.headers.email;
-        const userRecords = await user.myPage(email);
-        console.log(userRecords);
+        const userEmail = req.params.userEmail;
+        console.log('유저 이메일 : ', userEmail);
+        const userRecords = await user.myPage(userEmail);
+        console.log('유저 정보 : ', userRecords);
 
         // 마이페이지 정보를 클라이언트에게 전달
         res.json({ success: true, data: userRecords });
     } catch (error) {
-        console.error('Error in /mypage/:email API:', error.message);
+        console.error('Error in /mypage API:', error.message);
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 });

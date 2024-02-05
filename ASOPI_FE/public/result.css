@@ -1,195 +1,182 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap');
-
-
-
 body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  font-family: 'Noto Sans KR', sans-serif;
-   background-color: #FEFDF1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #fefdf1;
 }
-
 header {
-  width: 350px;
-  height: 45px;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  margin-top: 15px;
-  margin-bottom: 15px;
+    width: 350px;
+    height: 45px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
-
 .logo {
-  width: 100px;
-  height: auto;
-  display: flex;
-  margin-right: auto;
+    width: 100px;
+    height: auto;
+    display: flex;
+    margin-right: auto;
 }
-
 #logo img {
-  width: 90px;
-  height: auto;
-  margin-top:5px;
-  padding:5px;
-  justify-content: center;
-  align-items: center;
-  margin-left:5px;
+    width: 90px;
+    height: auto;
+    margin-top: 5px;
+    padding: 5px;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
 }
-
 #mypage_logo {
-  justify-content: center;
-  align-items: center;
-  margin-left: auto;
-  width:28px;
-  padding-left:50px;
-  margin-right:10px;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    width: 28px;
+    padding-left: 50px;
+    margin-right: 10px;
 }
-
-
 #diagnosis_result {
-  width: 320px;
-  height: auto;
-  margin: 1px auto;
-  text-align: center;
-  padding-bottom:10px;
-  border: 0px solid #000;
-  border-radius: 15px; 
-  background-color: #ffffff;
-  color: #474133;
-  border-radius: 15px; 
-  overflow: hidden;
-  font-family: 'Noto Sans KR', sans-serif;
-  box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.2);
+    width: 320px;
+    height: auto;
+    margin: 1px auto;
+    text-align: center;
+    padding-bottom: 10px;
+    border: 0px solid #000;
+    border-radius: 15px;
+    background-color: #ffffff;
+    color: #474133;
+    border-radius: 15px;
+    overflow: hidden;
+    font-family: 'Noto Sans KR', sans-serif;
+    box-shadow: 3px 3px 5px 2px rgba(0, 0, 0, 0.2);
 }
-
 #diagnosis_result h2 {
-  background-color: #ffffff; /* 배경 색 설정 */
+    background-color: #ffffff; /* 배경 색 설정 */
 }
-
 #result h2 {
-  background-color: #ffffff; /* 배경 색 설정 */
+    background-color: #ffffff; /* 배경 색 설정 */
 }
-
 #resultImage {
-  /*display: flex;
+    /*display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;*/
-  margin: 1px auto;
-  text-align: center;
-  color: #cfc3a6;
-  background-size: cover;
-  border-radius: 15px; 
-  overflow: hidden;
-  text-align: center;
-  width: 300px;
-  height: 300px;
-
-  overflow: hidden;
+    margin: 1px auto;
+    text-align: center;
+    color: #cfc3a6;
+    background-size: cover;
+    border-radius: 15px;
+    overflow: hidden;
+    text-align: center;
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
 }
-
 #resultImage {
-  text-align: center;
-  width: 280px;
-  height: 280px;
-  overflow: hidden;
+    text-align: center;
+    width: 280px;
+    height: 280px;
+    overflow: hidden;
 }
-
 #resultImage {
-  object-fit: cover;
+    object-fit: cover;
 }
-
 /*진단 결과 박스*/
 #result {
-  width: 320px;
-  height: 200px;
-  margin: 1px;
-  text-align: center;
-  padding-top: 10px;
-  background-color: #ffffff;
-  border: 0px solid #000;
-  color: #474133;
-  font-family: 'Noto Sans KR', sans-serif;
-  border-radius: 15px;
-  box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.2);
+    width: 320px;
+    height: auto;
+    margin: 1px;
+    text-align: center;
+    padding-top: 10px;
+    background-color: #ffffff;
+    border: 0px solid #000;
+    color: #474133;
+    font-family: 'Noto Sans KR', sans-serif;
+    border-radius: 15px;
+    box-shadow: 3px 3px 5px 2px rgba(0, 0, 0, 0.2);
+    padding-bottom: 10px;
 }
-
 #title {
-  font-size: 20px;
-  background-color: #ffffff;
+    /*진단 결과*/
+    font-size: 22px;
+    background-color: #ffffff;
 }
-
 #result_contents {
-  display: flex;
-  justify-content: space-around;
-  background-color: #ffffff;
-  margin-left:10px;
-  margin-right: 10px;
+    justify-content: space-around;
+    background-color: #ffffff;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 8px;
 }
-
-#childNameDisplay,
-#childAgeDisplay {
-  background-color: #ffffff; /* 텍스트의 배경색을 설정합니다. */
+#child_info {
+    /*아이 이름, 아이 나이*/
+    background-color: #ffffff; /* 텍스트의 배경색을 설정합니다. */
+    font-size: 15px;
+    display: flex;
+    text-align: center;
 }
-
-
+#result_title {
+    font: size 20px;
+    display: flex;
+}
+#description,
+#symptom {
+    background-color: #dbdbdb;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    font-size: 17px;
+}
 #map_button {
-  text-align: center;
+    text-align: center;
 }
-
 /* 지도 연결 버튼*/
 .map_button {
-background-color: #BBBBBB;
-border-radius: 23px;
-border: 1px solid #FEFDF1;
-display: inline-block;
- /* 수직 중앙 정렬 추가 */
- /* 수평 중앙 정렬 추가 */
-cursor: pointer;
-color: #ffffff;
-font-family: 'Noto Sans KR', sans-serif;
-font-size: 16px;
-/* font-weight: bold; */
-text-decoration: none;
-width: 280px;
-height: 55px;
-box-sizing: border-box;
-vertical-align: top;
-text-align: center;
-padding: 0;
-text-shadow: none;
-margin-bottom:20px;
+    background-color: #bbbbbb;
+    border-radius: 23px;
+    border: 1px solid #fefdf1;
+    display: inline-block;
+    /* 수직 중앙 정렬 추가 */
+    /* 수평 중앙 정렬 추가 */
+    cursor: pointer;
+    color: #ffffff;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 16px;
+    /* font-weight: bold; */
+    text-decoration: none;
+    width: 280px;
+    height: 55px;
+    box-sizing: border-box;
+    vertical-align: top;
+    text-align: center;
+    padding: 0;
+    text-shadow: none;
+    margin-bottom: 20px;
 }
-
-
-
-
 .map_button:hover {
-  background-color: #A3A08B;
+    background-color: #a3a08b;
 }
-
 .map_button:active {
-  position: relative;
-  top: 1px;
+    position: relative;
+    top: 1px;
 }
-
 /*다시 진단하기*/
 #return_button {
-  text-align: center;
+    text-align: center;
 }
-
 .return_button {
     background-color: #474133;
     border-radius: 23px;
     border: 1px solid #ffffff;
     display: inline-block;
-     /* 수직 중앙 정렬 추가 */
-     /* 수평 중앙 정렬 추가 */
+    /* 수직 중앙 정렬 추가 */
+    /* 수평 중앙 정렬 추가 */
     cursor: pointer;
-    color: #FEFDF1;
+    color: #fefdf1;
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 16px;
     /* font-weight: bold; */
@@ -202,13 +189,11 @@ margin-bottom:20px;
     text-align: center;
     padding: 0;
     text-shadow: none;
-  }
-
-.return_button:hover {
-  background-color: #cfc3a6;
 }
-
+.return_button:hover {
+    background-color: #cfc3a6;
+}
 .return_button:active {
-  position: relative;
-  top: 1px;
+    position: relative;
+    top: 1px;
 }

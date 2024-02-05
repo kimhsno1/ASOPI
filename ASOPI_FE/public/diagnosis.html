@@ -101,59 +101,139 @@
       const childSaveUrl = backendUrl + childInfoSaveEndpoint;
       const resultSaveUrl = backendUrl + resultSaveEndpoint;
       const userEmail = localStorage.userEmail;
-    // 병명, 증상, 설명 가져오는 함수
-    async function getDisease(modelResult){
+
+      // 토큰, 아이 정보, 이미지 전송 및 모달창 표시
+    async function sendChildInfoAndShowDiagnosisModal() {
+      try {
+        // 이미지 전송 및 모달창 표시
+        var result = await showDiagnosisModal();
+        console.log('모델 결과 : ', result);
+
+        // 아이 정보 가져오기
+        var childName = document.getElementById('name').value;
+        var childAge = document.getElementById('age').value;
+
+        // 병명 설명 증상 가져오기
+        var diseaseInfo = await getDisease(result);
+        console.log('병 정보 : ', diseaseInfo);
+
+        // 가져온 정보를 로컬 스토리지에 저장
+        localStorage.setItem('disease', diseaseInfo.disease);
+        localStorage.setItem('symptom', diseaseInfo.symptom);
+        localStorage.setItem('description', diseaseInfo.description);
+        console.log('병 정보 : ', diseaseInfo);
+      } catch (error) {
+        console.error('아이 정보 및 이미지 전송 중 오류:', error);
+      }
+    }
+
+        /* 모달창 표시 함수 */
+    async function showDiagnosisModal() {
       try{
-        const response = await $.ajax({
-          type:'GET',
-          url:resultSaveUrl,
-          processData: false,
-          contentType: false,
-          success: function (response) {
-            console.log('서버 응답:', response);
-          },
-          error: function (error) {
-            console.error('오류 발생:', error);
-          }
-        })
-        const disease = response.disease;
-        const symptom = response.symptom;
-        const desc = response.description;
-        localStorage.setItem('disease', disease);
-        localStorage.setItem('symptom', symptom);
-        localStorage.setItem('desc', desc);
-        return response;
+      // Check if a file is uploaded
+      var fileInput =  document.getElementById('chooseFile');
+      console.log('파일 인풋 : ', fileInput);
+      if (fileInput.files.length === 0) {
+        // Show 'Please upload a photo first' modal
+        openModal();
+      } else {
+        // Show 'Diagnosis in progress' modal
+        var diagnosisModal =  document.getElementById('diagnosis-modal');
+        diagnosisModal.style.display = 'block';
+        // Save uploaded image URL to local storage
+        var imageUrl =  document.getElementById('previewImage').src;
+        console.log('이미지 주소 : ', imageUrl);
+        localStorage.setItem('uploadedImage', imageUrl);
+        // Create FormData object to send image data
+        var formData = new FormData();
+        console.log('폼 데이터  : ', formData);
+        var file = fileInput.files[0];
+        console.log('파일 : ', file);
+        formData.append('image', file);
+        console.log('폼데이터 2222 : ', formData);
+        var modelResult = await sendImageToServer(formData);
+        console.log('모델 결과 : ', modelResult);
+        return modelResult;
+      }
+      } catch (error){
+        console.error('showDiagnosisModal 오류:', error);
+      }
+    }
+
+    /*async function submitAndGetResult(formData){
+      try{
+          // 이미지를 서버로 전송
+          var modelResult = await sendImageToServer(formData);
+          console.log(modelResult);
+          // 병명 가져오기 
+          var response = await getDisease(modelResult)
+          console.log(response);
       }catch(error){
-        console.error('병명을 못가져왓읍니다 :', error);
+        console.error(error);
+      }
+    }*/
+
+    // 병명, 증상, 설명 가져오는 함수
+    async function getDisease(result) {
+      try {
+        const userEmail = localStorage.userEmail;
+        const childName = localStorage.childName;
+        const childAge = localStorage.childAge;
+        const response = await axios.get(resultSaveUrl, {
+          params: {
+            modelResult: result,
+            userEmail : userEmail,
+            childName : childName,
+            childAge : childAge,
+          }
+          
+        });
+
+        const diseaseInfo = {
+          disease: response.data.disease,
+          symptom: response.data.symptom,
+          description: response.data.description,
+        };
+        
+        return diseaseInfo;
+      } catch (error) {
+        console.error('병명을 가져오지 못했습니다:', error);
         throw error;
       }
     }
-    /* 이미지 전송 함수 */
+
+    /* 이미지 전송 후 결과값 받아오는 함수 */
     async function sendImageToServer(formData) {
       try {
-        const modelResult = await $.ajax({
-          type: 'POST',
+        const response = await axios({
+          method: 'post',
           url: uploadUrl,
           data: formData,
-          processData: false,
-          contentType: false,
           headers: {
-            'Authorization': 'Bearer ' + userEmail
-          },
-          success: function (modelResult) {
-            console.log('서버 응답:', modelResult);
-          },
-          error: function (error) {
-            console.error('오류 발생:', error);
+            'Content-Type': 'multipart/form-data',
+            //'Authorization': 'Bearer ' + userEmail
           }
-        });;
+        });
+        
+        const modelResult = response.data.modelResult;
+        console.log('서버 응답:', modelResult);
+
+        redirectToResult();
+
         return modelResult;
       } catch (error) {
         console.error('이미지 전송 오류:', error);
         throw error;
       }
     }
-    /* 이미지 전송 후 처리 함수 */
+
+    function redirectToResult(){
+      // Redirect to result.html after 10 seconds
+      setTimeout(function () {
+        window.location.href = 'result.html';
+      }, 5000);
+    }
+    /* 이미지 전송 후 처리 함수
     async function sendImageAndRedirect(formData) {
       try {
         // 이미지 전송
@@ -166,9 +246,9 @@
         console.error('이미지 전송 후 처리 중 오류:', error);
         // 여기에서 추가적인 오류 처리 로직을 수행할 수 있습니다.
       }
-    }
-    //아이 정보 + 토큰 서버에 전송
-    async function sendChildInfoWithToken() {
+    }  */
+    //아이 정보 서버에 전송
+    /*async function sendChildInfo() {
     try {
         // child_info에서 입력받은 정보 가져오기
         var name = document.getElementById('name').value;
@@ -188,43 +268,7 @@
     } catch (error) {
         console.error('Error saving child info:', error);
     }
-}
-  /* 모달창 표시 함수 */
-  function showDiagnosisModal() {
-    // Check if a file is uploaded
-    var fileInput = document.getElementById('chooseFile');
-    if (fileInput.files.length === 0) {
-      // Show 'Please upload a photo first' modal
-      openModal();
-    } else {
-      // Show 'Diagnosis in progress' modal
-      var diagnosisModal = document.getElementById('diagnosis-modal');
-      diagnosisModal.style.display = 'block';
-      // Save uploaded image URL to local storage
-      var imageUrl = document.getElementById('previewImage').src;
-      localStorage.setItem('uploadedImage', imageUrl);
-      // Create FormData object to send image data
-      var formData = new FormData();
-      var file = fileInput.files[0];
-      formData.append('image', file);
-      // 이미지를 서버로 전송
-      sendImageAndRedirect(formData);
-    }
-  }
-  // 토큰, 아이 정보, 이미지 전송 및 모달창 표시
-  async function sendChildInfoAndShowDiagnosisModal() {
-    try {
-      // 이미지 전송 및 모달창 표시
-      await showDiagnosisModal();
-      // 아이 정보 전송
-      await sendChildInfoWithToken();
-      // 병명, 증상, 설명 불러오기 
-      await getDisease()
-    } catch (error) {
-      console.error('아이 정보 및 이미지 전송 중 오류:', error);
-      // 여기에서 추가적인 오류 처리 로직을 수행할 수 있습니다.
-    }
-  }
+}*/
     //프론트 함수
       //아이 정보 로컬스토리지에 저장
       document.getElementById('childForm').addEventListener('submit', async function (event) {

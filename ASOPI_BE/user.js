@@ -103,12 +103,12 @@ function verifyToken(req, res, next) {
 }
 
 // 마이페이지
-async function myPage(email) {
+async function myPage(userEmail) {
     const connection = await oracledb.getConnection();
     try {
         // 사용자 정보 가져오기
         const sql = 'SELECT RECORD, RECORD_DATE FROM USER_RECORD WHERE EMAIL = :email';
-        const binds = { email };
+        const binds = { email: userEmail };
 
         const result = await connection.execute(sql, binds, { outFormat: oracledb.OUT_FORMAT_OBJECT });
 
@@ -118,22 +118,22 @@ async function myPage(email) {
         }
 
         const userRecords = {
-            record: result.rows[0][0],
-            recordDate: result.rows[0][1],
+            record: result.rows.map((row) => row.RECORD),
+            recordDate: result.rows.map((row) => row.RECORD_DATE),
         };
 
         console.log('User records fetched successfully:', userRecords);
         return userRecords;
     } catch (error) {
-        console.error('Error fetching user records:', err.message);
-        throw err;
+        console.error('Error fetching user records:', error.message);
+        throw error;
     } finally {
         // 연결 닫기
         if (connection) {
             try {
                 await connection.close();
-            } catch (err) {
-                console.error('Error closing database connection:', err.message);
+            } catch (error) {
+                console.error('Error closing database connection:', error.message);
             }
         }
     }
