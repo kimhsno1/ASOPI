@@ -107,7 +107,7 @@ async function myPage(userEmail) {
     const connection = await oracledb.getConnection();
     try {
         // 사용자 정보 가져오기
-        const sql = 'SELECT RECORD, RECORD_DATE FROM USER_RECORD WHERE EMAIL = :email';
+        const sql = 'SELECT RECORD, RECORD_DATE, CHILDNAME, CHILDAGE FROM USER_RECORD WHERE EMAIL = :email';
         const binds = { email: userEmail };
 
         const result = await connection.execute(sql, binds, { outFormat: oracledb.OUT_FORMAT_OBJECT });
@@ -120,6 +120,8 @@ async function myPage(userEmail) {
         const userRecords = {
             record: result.rows.map((row) => row.RECORD),
             recordDate: result.rows.map((row) => row.RECORD_DATE),
+            childName: result.rows.map((row) => row.CHILDNAME),
+            childAge: result.rows.map((row) => row.CHILDAGE),
         };
 
         console.log('User records fetched successfully:', userRecords);

@@ -77,41 +77,30 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// 카카오 로그인
-app.get('/login/kakao', async (req, res) => {
-    const clientID = process.env.KAKAO_ID;
-    const redirectURI = process.env.KAKAO_URL;
-
+// 카카오 앱키 제공
+app.get('/kakao-key', (req, res) => {
     try {
-        // Kakao API에 대한 요청
-        const response = await axios.get(
-            `https://kauth.kakao.com/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURI}&response_type=code`
-        );
-        console.log(response.data);
-        // Kakao API의 응답을 클라이언트에 전달
-        res.json(response.data);
+        const kakaoAppkey = process.env.KAKAO_APPKEY;
+        const redirectUrl = process.env.KAKAO_URL;
+        res.send({ kakaoAppkey, redirectUrl });
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error', error);
+        console.error('failed provide appKey', error);
     }
 });
 
-app.get('/oauth', async (req, res) => {
-    const { code } = req.query;
+// 카카오 로그인
+app.get('/login/kakao', async (req, res) => {
+    const accessToken = req.headers.authorization.split(' ')[1];
 
     try {
-        // 카카오 토큰 받아오기
-        const accessToken = await user.getKakaoToken(code);
-        console.log('카카오 토큰 : ', accessToken);
-
         // 카카오 사용자 정보 가져오기
         const userInfo = await user.getKakaoUserInfo(accessToken);
+        // 필요한 사용자 정보를 가공하여 클라이언트에게 반환
         console.log('카카오 사용자 정보 : ', userInfo);
         res.json(userInfo);
-        res.redirect('http://localhost:3001');
     } catch (error) {
-        console.error('카카오 API 오류:', error);
-        res.status(500).json({ error: '카카오 API 오류' });
+        console.error(error);
+        res.status(500).send('Internal Server Error', error);
     }
 });
 

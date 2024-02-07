@@ -1,186 +1,206 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@200;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
 
-#searchtitle{
-  font-size: 18pt;
-  font-family: 'Noto Sans KR', sans-serif;
-  color:#474133;
-  margin-top: 40px;
-  margin-bottom: 20px;
+#searchtitle {
+    font-size: 18pt;
+    font-family: 'Gowun Dodum', sans-serif;
+    color: #474133;
+    margin-top: 40px;
+    margin-bottom: 20px;
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  font-size: 20pt;
-  font-family: 'Noto Sans KR', sans-serif;
-  background-color: #FEFDF1;
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    font-size: 20pt;
+    font-family: 'Gowun Dodum', sans-serif;
+    background-color: #fefdf1;
 }
 
-
-#map{
- font-size: 14px;
- width:350px;
-  height:350px;
-  position:relative;
-  overflow:hidden;
-  align-items: center; display: flex; /* Flex 컨테이너로 설정 */
-  justify-content: center;
-}
-
-
-.map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
-.map_wrap {
- 
+#map {
+    font-size: 14px;
+    width: 350px;
+    height: 350px;
     position: relative;
-    width:350px; /* 변경 가능: 지도 전체 너비 조절 */
-    
+    overflow: hidden;
+    align-items: center;
+    display: flex; /* Flex 컨테이너로 설정 */
+    justify-content: center;
+}
+
+.map_wrap a,
+.map_wrap a:hover,
+.map_wrap a:active {
+    color: #000;
+    text-decoration: none;
+}
+.map_wrap {
+    position: relative;
+    width: 350px; /* 변경 가능: 지도 전체 너비 조절 */
+
     padding: 5px;
     overflow-y: hidden;
-   
+
     z-index: 1;
     font-size: 18px;
     border-radius: 10px;
-  }
+}
 
-  form {
- 
+form {
     justify-content: center;
     display: flex;
     align-items: center;
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Gowun Dodum', sans-serif;
     margin: 10px;
     text-align: center;
-    width: 330px; 
-    background-color: #FEFDF1;
+    width: 330px;
+    background-color: #fefdf1;
     padding: 10px; /* Adjust padding as needed */
-    border-radius: 10px; 
-  }
- 
-  
-  #keyword {
+    border-radius: 10px;
+}
+
+#keyword {
     margin-left: 40px;
     margin-right: 10px;
     padding: 5px;
     font-size: 14px;
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Gowun Dodum', sans-serif;
     margin-bottom: 10px;
-  }
-  
-  button {
+}
+
+button {
     padding: 10px 15px;
     font-size: 14px;
     background-color: #474133;
-    color: #FEFDF1;
+    color: #fefdf1;
     border: none;
     cursor: pointer;
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Gowun Dodum', sans-serif;
     text-align: center;
     margin-bottom: 10px;
-    border-radius: 5px; 
-    
-  }
+    border-radius: 5px;
+}
 
-  button:hover {
-    background-color:#cfc3a6 ;
+button:hover {
+    background-color: #cfc3a6;
     color: #474133;
-    font-family: 'Noto Sans KR', sans-serif;
-
-    
-  }
-  
-
+    font-family: 'Gowun Dodum', sans-serif;
+}
 
 #menu_wrap {
-  top:0;left:0;bottom:0;width: 400px;
-  
-  padding:5px;
-  z-index: 1;
-  font-size:12px;
-  border-radius: 10px;}
-#menu_wrap hr {display: block; 
-  text-align: center;
-  height: 1px;border: 0; 
-  border-top: 2px solid #5F5F5F;
-  margin:3px 0;}
-#menu_wrap .option{text-align: center;}
-#menu_wrap .option p {margin:10px 0;}  
-#menu_wrap .option button {margin-left:5px;}
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 400px;
+
+    padding: 5px;
+    z-index: 1;
+    font-size: 12px;
+    border-radius: 10px;
+}
+#menu_wrap hr {
+    display: block;
+    text-align: center;
+    height: 1px;
+    border: 0;
+    border-top: 2px solid #5f5f5f;
+    margin: 3px 0;
+}
+#menu_wrap .option {
+    text-align: center;
+}
+#menu_wrap .option p {
+    margin: 10px 0;
+}
+#menu_wrap .option button {
+    margin-left: 5px;
+}
 
 #placesList {
-  width: 330px;
-  padding: 0; /* 목록의 padding 제거 */
-  list-style: none;
-  font-family: 'Noto Sans KR', sans-serif;
-  overflow-y: auto; /* 목록에만 스크롤 적용 */
-  height: 500px;
-  font-size: 16px;
-  text-align: left; /* 목록 높이 설정 */
-
+    width: 330px;
+    padding: 0; /* 목록의 padding 제거 */
+    list-style: none;
+    font-family: 'Gowun Dodum', sans-serif;
+    overflow-y: auto; /* 목록에만 스크롤 적용 */
+    height: 500px;
+    font-size: 16px;
+    text-align: left; /* 목록 높이 설정 */
 }
 #placesList li {
-  text-align: left;
-  font-size: 15px;
-  font-family: 'Noto Sans KR', sans-serif;
+    text-align: left;
+    font-size: 15px;
+    font-family: 'Gowun Dodum', sans-serif;
 }
-
 
 #placesList .item {
-  text-align: left;
-  position:relative;
-  border-bottom:0.5px dashed #474133;
-  overflow: hidden;
-  cursor: pointer;
-  min-height: 65px;
+    text-align: left;
+    position: relative;
+    border-bottom: 0.5px dashed #474133;
+    overflow: hidden;
+    cursor: pointer;
+    min-height: 65px;
 }
-#placesList .item span {display: block;margin-top:4px;}
-#placesList .item h5{
-  font-size: 16px;
-  font-family: 'Noto Sans KR', sans-serif;
-  margin: 0;
-  color:#474133;
-  margin-top: 5px;
-
-} 
+#placesList .item span {
+    display: block;
+    margin-top: 4px;
+}
+#placesList .item h5 {
+    font-size: 16px;
+    font-family: 'Gowun Dodum', sans-serif;
+    margin: 0;
+    color: #474133;
+    margin-top: 5px;
+}
 
 #placesList .item .info {
-  text-align: left;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap; 
-  font-size: 14px;
-  font-family: 'Noto Sans KR', sans-serif;
-  text-align: left;
-  margin: 0;}
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 14px;
+    font-family: 'Gowun Dodum', sans-serif;
+    text-align: left;
+    margin: 0;
+}
 
 /*#placesList .item .info{
   padding:1px 0 5px 50px;
   text-align: center;
   font-family: 'Noto Sans KR', sans-serif}*/
 
-#placesList .info .gray {color:#888;font-family: 'Noto Sans KR', sans-serif;}
-#placesList .info .jibun {
-
-  
-  text-align: left;
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 14px;
+#placesList .info .gray {
+    color: #888;
+    font-family: 'Gowun Dodum', sans-serif;
 }
-#placesList .info .tel {color:#474133; 
-  font-family: 'Noto Sans KR', sans-serif;
-font-size: small;
-margin-bottom: 5px;}
-
+#placesList .info .jibun {
+    text-align: left;
+    font-family: 'Gowun Dodum', sans-serif;
+    font-size: 14px;
+}
+#placesList .info .tel {
+    color: #474133;
+    font-family: 'Gowun Dodum', sans-serif;
+    font-size: small;
+    margin-bottom: 5px;
+}
 
 #pagination {
-  margin:10px auto;
-  text-align: center;
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: medium;
-  color:#474133}
-#pagination a {display:inline-block;
-  margin-right:10px;}
-#pagination .on {font-family: 'Noto Sans KR', sans-serif;font-weight: bold; cursor: default;color:#777;}
+    margin: 10px auto;
+    text-align: center;
+    font-family: 'Gowun Dodum', sans-serif;
+    font-size: medium;
+    color: #474133;
+}
+#pagination a {
+    display: inline-block;
+    margin-right: 10px;
+}
+#pagination .on {
+    font-family: 'Gowun Dodum', sans-serif, sans-serif;
+    font-weight: bold;
+    cursor: default;
+    color: #777;
+}

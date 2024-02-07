@@ -14,15 +14,21 @@
                 <img src="./image/asopi_logo.png" alt="로고" width="50%" />
             </div>
         </header>
-        <div class="head-container">
-            <h2 id="title">안녕하세요 <span id="username"></span>님</h2>
-            <h3 id="email"></h3>
+
+        <div id="head-container">
+            <div class="profile">
+                <h2 id="title">안녕하세요 <span id="username"></span>님</h2>
+                <h3 id="email"></h3>
+            </div>
+            <div id="logout">
+                <button id="logout_button" onclick="clearLocalStorage()">로그아웃</button>
+            </div>
         </div>
 
         <div class="button-container"></div>
         <div class="container">
             <div class="btn-box" style="text-align: left">
-                <h2 id="title2" style="display: inline-block">진단내역보기</h2>
+                <h2 id="title2" style="display: inline-block">진단 내역 보기</h2>
                 <button id="btn-close-all" style="display: inline-block">모두 닫기</button>
             </div>
             <table>
@@ -69,43 +75,60 @@
 
             window.onload = async function () {
                 try {
-                    // 사용자 정보를 가져옵니다.
-                    const userData = await fetchUserData();
-                    console.log('user data : ', userData);
-                    const userName = localStorage.userName;
-                    const userEmail = localStorage.userEmail;
+                    if (!localStorage.userToken) {
+                        alert('로그인이 필요합니다.'); // 경고 메시지 표시
+                        to_main();
+                        return;
+                    }
 
-                    // 사용자 정보가 있는 경우 페이지에 반영합니다.
-                    if (userData) {
+                    let userData;
+
+                    // 로컬 스토리지에 사용자 정보가 있는 경우
+                    if (localStorage.userName && localStorage.userEmail) {
+                        const userName = localStorage.userName;
+                        const userEmail = localStorage.userEmail;
+
+                        // 사용자 정보를 화면에 반영
                         document.getElementById('username').textContent = userName;
                         document.getElementById('email').textContent = userEmail;
 
-                        // 진료 기록을 화면에 표시합니다.
-                        displayDiagnosisRecords(userData.records, userData.recordDates);
+                        // 진료 기록을 화면에 표시
+                        displayDiagnosisRecords(
+                            localStorage.records,
+                            localStorage.recordDates,
+                            localStorage.childName,
+                            localStorage.childAge
+                        );
                     } else {
-                        console.log('User info not available.');
+                        // 서버에서 사용자 정보를 가져옵니다.
+                        userData = await fetchUserData();
                     }
 
-                    // Accordion 기능 추가
-                    const $accordion = document.querySelectorAll('.accordion-container');
-                    const $accordionContent = document.querySelectorAll('.accordion-content');
-                    const $closeBtn = document.querySelector('#btn-close-all');
+                    // 사용자 정보가 있는 경우 페이지에 반영
+                    if (userData) {
+                        document.getElementById('username').textContent = userData.userName;
+                        document.getElementById('email').textContent = userData.userEmail;
 
-                    for (let i = 0; i < $accordion.length; i++) {
-                        $accordion[i].addEventListener('click', () => {
-                            $accordionContent[i].classList.add('active');
-                        });
+                        // 진료 기록을 화면에 표시
+                        displayDiagnosisRecords(
+                            userData.records,
+                            userData.recordDates,
+                            userData.childName,
+                            userData.childAge
+                        );
+                    } else {
+                        console.log('사용자 정보를 가져올 수 없습니다.');
                     }
-
-                    $closeBtn.addEventListener('click', () => {
-                        for (const element of $accordionContent) {
-                            element.classList.remove('active');
-                        }
-                    });
                 } catch (error) {
-                    console.error('Error loading user data:', error);
+                    console.error('사용자 데이터를 불러오는 중 오류가 발생했습니다:', error);
                 }
             };
+
+            //로그아웃
+            function clearLocalStorage() {
+                localStorage.clear(); // 로컬 스토리지를 비움
+                window.location.href = 'http://localhost:3000/'; //메인 페이지로 이동하도록 설정
+            }
 
             // 사용자 정보를 가져오는 함수
             async function fetchUserData() {
@@ -118,8 +141,12 @@
                     console.log('기록 : ', records);
                     const recordDates = userData.data.recordDate;
                     console.log('진료 시각 : ', recordDates);
+                    const childName = userData.data.childName;
+                    console.log('애 이름 : ', childName);
+                    const childAge = userData.data.childAge;
+                    console.log('애 나이 : ', childAge);
 
-                    return { records, recordDates };
+                    return { records, recordDates, childName, childAge };
                 } catch (error) {
                     console.error('Error fetching user info:', error);
                     return null;
@@ -127,7 +154,7 @@
             }
 
             // 진료 내역을 화면에 표시하는 함수
-            function displayDiagnosisRecords(userRecords, recordDates) {
+            function displayDiagnosisRecords(userRecords, recordDates, childName, childAge) {
                 // 진단 기록 동적 생성
                 const diagnosisRecords = document.getElementById('diagnosisRecords');
 
@@ -141,17 +168,20 @@
                             <td>></td>
                             <td>
                                 <div class="accordion-container">
-                                    <h3 class="accordion-title">진단기록${index + 1}</h3>
+                                    <div class="record_title">
+                                        <h3 class="accordion-title">진단기록${index + 1}</h3>
+                                        <h3 class="childName"> ${childName[index]}</h3>
+                                        <h3 class="childAge"> ${childAge[index]} </h3>
+                                    </div>
                                     <div class="accordion-content">
-                                        <p>${recordDates[index]} <br> 
-                                           질병: ${record.disease} <br> 
-                                           증상: ${record.symptom} <br> 
-                                           설명: ${record.description}</p>
+                                        <p>${formatDate(recordDates[index])}</p>
+                                        <p class="disease">질병: ${record.disease.replace(/"/g, '')}</p>
+                                        <p class="symptom">증상: ${record.symptom.replace(/"/g, '')}</p>
+                                        <p class="description">설명: ${record.description.replace(/"/g, '')}</p>
                                     </div>
                                 </div>
                             </td>
-                            <td>${record.childName} ${record.childAge}</td>
-                            <td>${record.disease}</td>
+                            
                         `;
                         diagnosisRecords.appendChild(tr);
                     });
@@ -159,6 +189,13 @@
                     console.log('No diagnosis records available.');
                     // TODO: 진단 기록이 없을 때의 처리를 추가하세요.
                 }
+            }
+
+            //진단 기록에서 날짜만 추출
+            function formatDate(dateString) {
+                const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+                const formattedDate = new Date(dateString).toISOString().split('T')[0];
+                return formattedDate;
             }
 
             function navigateToMap() {
@@ -210,7 +247,18 @@
                 window.location.href = targetPageUrl + targetElementId;
             }
 
-            function sendTokenAndEmailToBackend() {
+            function checkTokenAndRedirect() {
+                // 로컬 스토리지에서 토큰을 가져옵니다.
+                const userToken = localStorage.getItem('userToken');
+
+                // 토큰이 없는 경우 경고 메시지를 표시하고 메인 페이지로 이동합니다.
+                if (!userToken) {
+                    alert('로그인이 필요합니다.'); // 경고 메시지 표시
+                    window.location.href = 'http://localhost:3000/'; // 메인 페이지로 이동
+                }
+            }
+
+            /*function sendTokenAndEmailToBackend() {
                 // 사용자의 토큰과 이메일을 로컬 스토리지에서 가져오기
                 const userToken = localStorage.getItem('userToken');
                 const userEmail = '사용자의 이메일 가져오는 방법'; // 사용자의 이메일을 가져오는 방법을 추가해야 합니다.
@@ -228,6 +276,25 @@
                         console.error('오류 발생:', error);
                     },
                 });
+            }*/
+
+            /* window.onload = function () {
+                checkTokenAndRedirect(); // 페이지가 로드되면 바로 실행될 함수 호출
+            };
+
+            function checkTokenAndRedirect() {
+                // 로컬 스토리지에서 토큰을 가져옵니다.
+                const userToken = localStorage.getItem('userToken');
+
+                // 토큰이 없는 경우 경고 메시지를 표시하고 메인 페이지로 이동합니다.
+                if (!userToken) {
+                    alert('로그인이 필요합니다.'); // 경고 메시지 표시
+                    window.location.href = 'http://localhost:3000/'; // 메인 페이지로 이동
+                }
+            }  */
+
+            function to_main() {
+                window.location.href = 'http://localhost:3000/';
             }
         </script>
     </body>

@@ -1,138 +1,138 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
 
 body {
-  font-family: 'Noto Sans KR', sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 30px;
-  background-color: #FEFDF1;
+    font-family: 'Gowun Dodum', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+    background-color: #fefdf1;
 }
 
 header {
-  margin-bottom: 20px;
-  font-family: 'Noto Sans KR', sans-serif;
+    margin-bottom: 20px;
+    font-family: 'Gowun Dodum', sans-serif;
 }
 
 #logo {
-  margin: 0px 0px 0px 0px; /* adjust the top margin as needed */
-  width: 100%; /* adjust the width as needed */
-  padding: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    margin: 0px 0px 0px 0px; /* adjust the top margin as needed */
+    width: 100%; /* adjust the width as needed */
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #logo img {
-  width: 200px; /* adjust the width as needed */
-  height: auto; /* this will maintain the aspect ratio of the image */
+    width: 200px; /* adjust the width as needed */
+    height: auto; /* this will maintain the aspect ratio of the image */
 }
 
-
 #signup_form {
-  width: 300px;
-  max-width: 200%;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 5px;
-  font-family: 'Noto Sans KR', sans-serif;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 30px;
+    width: 300px;
+    max-width: 200%;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    font-family: 'Gowun Dodum', sans-serif;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
 }
 
 label {
-  display: block;
-  margin: 10px 0;
-  color: #474133;
-  font-family: 'Noto Sans KR', sans-serif;
+    display: block;
+    margin: 10px 0;
+    color: #474133;
+    font-family: 'Gowun Dodum', sans-serif;
 }
 
 #email_title {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .id_overlap_button {
-  margin-left: 10px; /* 원하는 여백 조정 */
-  margin-top:3px;
+    margin-left: 10px; /* 원하는 여백 조정 */
+    margin-top: 3px;
 }
 
 #pw_condition {
-  font-size:13px;
-  color:#888783;
-  padding-left: 20px;
+    font-size: 13px;
+    color: #888783;
+    padding-left: 20px;
 }
-
 
 #birthdate {
-  display: flex;
-  align-items: flex-end; 
-  gap: 10px; /* 간격 조절 */
+    display: flex;
+    align-items: flex-end;
+    gap: 10px; /* 간격 조절 */
 }
 
-#bir_yy, #bir_dd {
-  justify-content: space-between;
+#bir_yy,
+#bir_dd {
+    justify-content: space-between;
 }
 
 #bir_yy {
-  margin-right: 18px; /* 간격 조절 */
+    margin-right: 18px; /* 간격 조절 */
 }
 
 .register2 {
-  margin-bottom:30px;
+    margin-bottom: 30px;
 }
 
 #bir_yy,
 #bir_mm,
 #bir_dd {
-  display: inline-block;
-  width: 80px;
+    display: inline-block;
+    width: 80px;
 }
 
 #mm {
-  width: 80px;
-  height: 45px;
-  margin-right: 10px; /* 간격 조절 */
-  margin-bottom:10px;
+    width: 80px;
+    height: 45px;
+    margin-right: 10px; /* 간격 조절 */
+    margin-bottom: 10px;
 }
 
 #bir_dd {
-  margin-right: 10px; /* 간격 조절 */
-  margin-left:5px;
+    margin-right: 10px; /* 간격 조절 */
+    margin-left: 5px;
 }
 
 #gender {
-  width: 100px;
-  height: 45px; /* 수정된 부분 */
-  margin-bottom: 10px;
+    width: 100px;
+    height: 45px; /* 수정된 부분 */
+    margin-bottom: 10px;
 }
 
 input {
-  width: 94%;
-  padding: 10px;
-  margin: 5px 0 10px;
-  border: 1px solid #ddd;
-  font-size: 16px;
-  border-radius: 3px;
-  font-family: 'Noto Sans KR', sans-serif;
+    width: 94%;
+    padding: 10px;
+    margin: 5px 0 10px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    border-radius: 3px;
+    font-family: 'Gowun Dodum', sans-serif;
 }
 
 #signup_button {
-  width: 303px;
-  padding: 15px 10px;
-  margin: 30px 0;
-  background-color: #474133;
-  color: #FEFDF1;
-  border: none;
-  border-radius: 15px;
-  cursor: pointer;
-  font-size: 20px;
-  font-family: 'Noto Sans KR', sans-serif;
-  font-weight: bold;
+    width: 303px;
+    padding: 15px 10px;
+    margin: 30px 0;
+    background-color: #474133;
+    color: #fefdf1;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 20px;
+    font-family: 'Gowun Dodum', sans-serif;
+    font-weight: bold;
 }
 
 #signup_button:hover {
-  background-color: #6e6e50;
-  font-family: 'Noto Sans KR', sans-serif;
+    background-color: #6e6e50;
+    font-family: 'Gowun Dodum', sans-serif;
 }

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@200;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
 
 body {
     display: flex;
@@ -6,7 +7,7 @@ body {
     align-items: center;
     justify-content: center;
     margin-top: 30px;
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Gowun Dodum', sans-serif;
     background-color: #fefdf1;
 }
 
@@ -30,13 +31,13 @@ form {
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Gowun Dodum', sans-serif;
 }
 
 h2 {
     text-align: center;
     color: #474133;
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Gowun Dodum', sans-serif;
 }
 
 /*
@@ -48,7 +49,7 @@ label {
     display: block;
     margin-bottom: 5px;
     color: #6e6e50;
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Gowun Dodum', sans-serif;
 }
 
 input[type='text'],
@@ -58,7 +59,7 @@ input[type='password'] {
     border: 1px solid #ddd;
     border-radius: 3px;
     font-size: 14px;
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Gowun Dodum', sans-serif;
 }
 
 #login_button[type='submit'] {
@@ -68,7 +69,7 @@ input[type='password'] {
     display: inline-block;
     cursor: pointer;
     color: #fefdf1;
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Gowun Dodum', sans-serif;
     font-size: 16px;
     font-weight: bold;
     padding: 16px 100px;
@@ -98,7 +99,7 @@ input[type='password'] {
     border: 0px solid #a4a48b;
     cursor: pointer;
     color: #474133;
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Gowun Dodum', sans-serif;
     font-size: 14px;
     font-weight: bold;
     text-align: center;
@@ -112,7 +113,7 @@ input[type='password'] {
 .singup_button:hover {
     background-color: #cfc3a6;
     color: #474133;
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Gowun Dodum', sans-serif;
 }
 .singup_button:active {
     position: relative;

@@ -26,7 +26,7 @@
             <section id="result">
                 <div id="title">
                     <p id="result-title">진단 결과</p>
-                    <p id="diseaseDisplay" style="font-size: 18px"></p>
+                    <p id="diseaseDisplay" style="font-size: 25px"></p>
                 </div>
                 <div id="result_contents">
                     <div id="child_info">
@@ -37,10 +37,9 @@
                         <span id="childAgeDisplay" style="font-size: 15px"></span>
                     </div>
                     <br />
-                    <p id="description">정의:펼쳐진_책:</p>
-                    <p id="descriptionDisplay"></p>
-                    <br />
-                    <p id="symptom">증상:돋보기:</p>
+                    <p id="description">정의📖</p>
+                    <p id="descriptionDisplay" style="margin-bottom: 40px"></p>
+                    <p id="symptom">증상🔍</p>
                     <p id="symptomDisplay"></p>
                 </div>
             </section>
@@ -69,13 +68,15 @@
                     console.error('Error:', error);
                 }
             };
+
             // 사용자가 입력한 정보를 로컬 스토리지에서 가져옵니다.
             async function fetchUserDataFromLocalStorage() {
                 const childName = localStorage.getItem('childName') || '정보 없음'; /*아이 이름*/
                 const childAge = localStorage.getItem('childAge') || '정보 없음'; /*아이 나이*/
                 const disease = localStorage.getItem('disease') || '정보 없음'; /*질환명*/
-                const description = localStorage.getItem('description') || '정보 없음'; /*질환 정의*/
-                const symptom = localStorage.getItem('symptom') || '정보 없음'; /*질환 증상*/
+                // description과 symptom에서 개행 문자(\n)를 <br> 태그로 변환
+                const description = (localStorage.getItem('description') || '정보 없음').replace(/\n/g, '<br>');
+                const symptom = (localStorage.getItem('symptom') || '정보 없음').replace(/\n/g, '<br>');
                 return {
                     childName: childName,
                     childAge: childAge,
@@ -84,17 +85,23 @@
                     symptom: symptom,
                 };
             }
+
             // 사용자 정보를 화면에 표시합니다.
             function displayUserData(userData) {
                 document.getElementById('childNameDisplay').textContent = '아이 이름 : ' + userData.childName;
                 document.getElementById('childAgeDisplay').textContent = '아이 나이 : ' + userData.childAge;
                 document.getElementById('diseaseDisplay').textContent = userData.disease; /*질환명*/
-                document.getElementById('descriptionDisplay').textContent = userData.description; /*질환 정의*/
-                document.getElementById('symptomDisplay').textContent = userData.symptom; /*질환 증상*/
+                // description과 symptom에 대해 따옴표와 개행 문자를 지우고 <br> 태그로 변환하여 HTML로 표시
+                document.getElementById('descriptionDisplay').innerHTML = userData.description
+                    .replace(/\\n|"/g, '')
+                    .replace(/\n/g, '<br>');
+                document.getElementById('symptomDisplay').innerHTML = userData.symptom
+                    .replace(/\\n|"/g, '')
+                    .replace(/\n/g, '<br>');
             }
             // 사용자가 확인 버튼을 클릭하면 호출되는 함수입니다.
             function to_main() {
-                window.location.href = 'main.html';
+                window.location.href = 'http://localhost:3000/';
             }
             function to_mypage() {
                 window.location.href = 'mypage.html';
