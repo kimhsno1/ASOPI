@@ -80,29 +80,8 @@
                         to_main();
                         return;
                     }
-
-                    let userData;
-
-                    // 로컬 스토리지에 사용자 정보가 있는 경우
-                    if (localStorage.userName && localStorage.userEmail) {
-                        const userName = localStorage.userName;
-                        const userEmail = localStorage.userEmail;
-
-                        // 사용자 정보를 화면에 반영
-                        document.getElementById('username').textContent = userName;
-                        document.getElementById('email').textContent = userEmail;
-
-                        // 진료 기록을 화면에 표시
-                        displayDiagnosisRecords(
-                            localStorage.records,
-                            localStorage.recordDates,
-                            localStorage.childName,
-                            localStorage.childAge
-                        );
-                    } else {
-                        // 서버에서 사용자 정보를 가져옵니다.
-                        userData = await fetchUserData();
-                    }
+                    const userEmail = localStorage.userEmail;
+                    const userData = await fetchUserData(userEmail);
 
                     // 사용자 정보가 있는 경우 페이지에 반영
                     if (userData) {
@@ -131,9 +110,9 @@
             }
 
             // 사용자 정보를 가져오는 함수
-            async function fetchUserData() {
+            async function fetchUserData(userEmail) {
                 try {
-                    const response = await axios.get(mypageUrl);
+                    const response = await axios.get(`${mypageUrl}?userEmail=${userEmail}`);
                     const userData = response.data;
 
                     // record와 recordDate를 따로 추출

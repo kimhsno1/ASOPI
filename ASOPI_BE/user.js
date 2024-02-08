@@ -1,13 +1,15 @@
 const oracledb = require('oracledb');
+oracledb.autoCommit = true;
 const axios = require('axios');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { encode } = require('punycode');
+const { app } = require('./app');
 
 // 회원가입
 async function signUp(nickname, email, password, birth, gender) {
-    const connection = await oracledb.getConnection();
     try {
+        const connection = await oracledb.getConnection();
         // 암호화된 비밀번호 생성
         const hashedPassword = await bcrypt.hash(password, 10);
 
