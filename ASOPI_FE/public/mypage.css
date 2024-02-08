@@ -140,16 +140,14 @@ tbody td:nth-child(4) {
 }
 
 .accordion-content {
-    height: 10px;
-    overflow-y: hidden;
+    height: 10; /* 초기 높이를 자동으로 조정하여 내용이 표시되도록 함 */
+    overflow-y: hidden; /* 내용이 숨겨지지 않도록 설정 */
     transition: all 1.4s;
-    min-height: 20px;
+    min-height: 10px;
 }
 
 .active {
-    display: block;
-    height: 100px;
-    overflow: auto;
+    height: auto;
 }
 
 #hospital-button {

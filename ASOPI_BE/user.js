@@ -1,10 +1,12 @@
 const oracledb = require('oracledb');
+const connection = require('./database');
 oracledb.autoCommit = true;
 const axios = require('axios');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { encode } = require('punycode');
 const { app } = require('./app');
+// const connection = require('./database');
 
 // 회원가입
 async function signUp(nickname, email, password, birth, gender) {
@@ -50,7 +52,7 @@ async function login(email, password) {
     const connection = await oracledb.getConnection();
     try {
         // 사용자 정보 조회
-        const sql = 'SELECT  ID, NICKNAME, EMAIL, PASSWORD FROM USER_TABLE WHERE EMAIL = :email';
+        const sql = 'SELECT NICKNAME, EMAIL, PASSWORD FROM USER_TABLE WHERE EMAIL = :email';
         const binds = { email };
 
         const result = await connection.execute(sql, binds);
@@ -61,7 +63,7 @@ async function login(email, password) {
 
         const user = result.rows[0];
         console.log(user);
-        const hashedPassword = user[3];
+        const hashedPassword = user[2];
 
         const passwordMatch = await bcrypt.compare(password, hashedPassword);
         console.log('비밀번호 비교 결과 : ', passwordMatch);
@@ -71,7 +73,7 @@ async function login(email, password) {
         }
 
         console.log('User logged in successfully!');
-        return { name: user[1], email: user[2] };
+        return { name: user[0], email: user[1] };
     } catch (err) {
         console.error('Error logging in:', err.message);
         throw err;
