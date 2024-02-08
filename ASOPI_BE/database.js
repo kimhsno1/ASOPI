@@ -4,13 +4,6 @@ require('dotenv').config();
 const dbConfig = require('./dbConfig');
 const { app } = require('./app');
 
-// const connectDB = {
-//     user: 'ASOPI',
-//     password: 'qwer1234',
-//     connectString: '15.165.253.158:1521/XE',
-//     poolAlias: 'default',
-// };
-
 // Oracle 데이터베이스 연결
 async function connectToDB() {
     try {
