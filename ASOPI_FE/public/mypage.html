@@ -161,9 +161,9 @@ function displayDiagnosisRecords(userRecords, recordDates, childName, childAge) 
                             <h3 class="childAge"> ${childAge[index]} </h3>
                         </div>
                         <div class="full-content" style="display: none;">
-                            <p class="disease">질병: ${record.disease.replace(/"/g, '')}</p>
-                            <p class="symptom">증상: ${record.symptom.replace(/"/g, '')}</p>
-                            <p class="description">설명: ${record.description.replace(/"/g, '')}</p>
+                            <p class="disease">질병: ${record.disease.replace(/\\n|""/g, '')}</p>
+                            <p class="symptom">증상: ${record.symptom.replace(/\\n|""/g, '')}</p>
+                            <p class="description">설명: ${record.description.replace(/\\n|""/g, '')}</p>
                         </div>
                     </div>
                 </td>

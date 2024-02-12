@@ -88,6 +88,7 @@ label {
 #bir_dd {
     display: inline-block;
     width: 80px;
+    font-family: 'Gowun Dodum', sans-serif;
 }
 
 #mm {
@@ -95,6 +96,9 @@ label {
     height: 45px;
     margin-right: 10px; /* 간격 조절 */
     margin-bottom: 10px;
+    font-family: 'Gowun Dodum', sans-serif;
+    font: size 16px;
+
 }
 
 #bir_dd {
@@ -106,6 +110,9 @@ label {
     width: 100px;
     height: 45px; /* 수정된 부분 */
     margin-bottom: 10px;
+    font-family: 'Gowun Dodum', sans-serif;
+    font: size 16px;
+
 }
 
 input {
